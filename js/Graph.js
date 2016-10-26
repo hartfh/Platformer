@@ -1,4 +1,4 @@
-var Grid = function(config) {
+var Graph = function(config) {
 	this.width	= config.width || 0;
 	this.height	= config.height || 0;
 	this.nodes	= [];
@@ -26,7 +26,7 @@ var Grid = function(config) {
  * @param		{integer}		x
  * @param		{integer}		y
  */
-Grid.prototype.addNode = function(x, y) {
+Graph.prototype.addNode = function(x, y) {
 	//this.removeNode(x, y);
 
 	var north = this.getNode(x, y - 1);
@@ -60,7 +60,7 @@ Grid.prototype.addNode = function(x, y) {
  *
  * @param		{function}	callback	Callback function. Break the loop by returning true
  */
-Grid.prototype.eachNode = function(callback) {
+Graph.prototype.eachNode = function(callback) {
 	for(var x in this.nodes) {
 		var column = this.nodes[x];
 
@@ -81,7 +81,7 @@ Grid.prototype.eachNode = function(callback) {
  * @param		{integer}		y
  * @return	{boolean}
  */
-Grid.prototype.withinBounds = function(x, y) {
+Graph.prototype.withinBounds = function(x, y) {
 	if( x >= this.width || x < 0 ) {
 		return false;
 	}
@@ -99,7 +99,7 @@ Grid.prototype.withinBounds = function(x, y) {
  * @param		{integer}		y
  * @return	{object}
  */
-Grid.prototype.getNode = function(x, y) {
+Graph.prototype.getNode = function(x, y) {
 	if( this.withinBounds(x, y) ) {
 		return this.nodes[x][y];
 	}

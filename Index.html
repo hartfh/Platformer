@@ -16,19 +16,27 @@
 	</style>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<script src="js/constants.js"></script>
-	<script src="js/Grid.js"></script>
+	<script src="js/utilities.js"></script>
+	<script src="js/PixelGrid.js"></script>
+	<script src="js/Viewport.js"></script>
+	<script src="js/Graph.js"></script>
 	<script src="js/Node.js"></script>
 	<script src="js/AssetGenerator.js"></script>
 	<script src="js/Asset.js"></script>
 	<script>
-		var grid = new Grid({
-			width:		20,
-			height:		20
+		var pxGrid = new PixelGrid({
+			width:	800,
+			height:	500
 		});
-		console.log(grid);
 
-		var testNode = grid.getNode(10, 10);
-		console.log(testNode);
+		var vport = new Viewport({
+			width:		20,
+			height:		20,
+			pixelGrid:	pxGrid
+		});
+
+		vport.shift('s');
+		console.log(vport.getPosition());
 
 		var assetGen = new AssetGenerator({
 			name:	'testGen'
