@@ -7,7 +7,7 @@ Viewport.prototype.init = function(config) {
 	var _height	= config.height || 0;			// Pixel height
 	var _width	= config.width || 0;			// Pixel width
 	var _pixelGrid	= config.pixelGrid;
-	var _coords	= config.coords || {x: 0, y: 0};	// Position within the PixelGrid
+	var _position	= config.position || {x: 0, y: 0};	// Position within the PixelGrid
 
 	/**
 	 * Get the height and width.
@@ -27,7 +27,7 @@ Viewport.prototype.init = function(config) {
 	 * @return	{object}
 	 */
 	this.getPosition = function() {
-		return _coords;
+		return _position;
 	}
 
 	/**
@@ -40,21 +40,21 @@ Viewport.prototype.init = function(config) {
 			var adjust	= DIRECTIONS[direction];
 			var pxDims	= _pixelGrid.getDimensions();
 
-			_coords.x += adjust.x;
-			_coords.y += adjust.y;
+			_position.x += adjust.x;
+			_position.y += adjust.y;
 
 			// Ensure the viewport remaims within its PixelGrid's boundaries
-			if( _coords.x < 0 ) {
-				_coords.x = 0;
+			if( _position.x < 0 ) {
+				_position.x = 0;
 			}
-			if( _coords.y < 0 ) {
-				_coords.y = 0;
+			if( _position.y < 0 ) {
+				_position.y = 0;
 			}
-			if( _coords.x >= pxDims.width ) {
-				_coords.x = pxDims.width - 1;
+			if( _position.x >= pxDims.width ) {
+				_position.x = pxDims.width - 1;
 			}
-			if( _coords.x >= pxDims.height ) {
-				_coords.x = pxDims.height - 1;
+			if( _position.x >= pxDims.height ) {
+				_position.x = pxDims.height - 1;
 			}
 		}
 	}

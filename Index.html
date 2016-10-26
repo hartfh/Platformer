@@ -25,8 +25,8 @@
 	<script src="js/Asset.js"></script>
 	<script>
 		var pxGrid = new PixelGrid({
-			width:	800,
-			height:	500
+			width:	880,
+			height:	540
 		});
 
 		var vport = new Viewport({
@@ -36,15 +36,19 @@
 		});
 
 		vport.shift('s');
-		console.log(vport.getPosition());
+
+
 
 		var assetGen = new AssetGenerator({
 			name:	'testGen'
 		});
-		console.log(assetGen);
+		//console.log(assetGen);
 		var testAsset = assetGen.createAsset({});
 
-		console.log( assetGen.getAsset( testAsset.handle ) );
+
+		pxGrid.addAssetToRegion(testAsset);
+		pxGrid.removeAssetFromRegion(testAsset);
+		//console.log( assetGen.getAsset( testAsset.handle ) );
 	</script>
 </head>
 <body>
