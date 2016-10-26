@@ -15,14 +15,28 @@
 		}
 	</style>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-	<script src="js/Node.js"></script>
+	<script src="js/constants.js"></script>
 	<script src="js/Grid.js"></script>
+	<script src="js/Node.js"></script>
+	<script src="js/AssetGenerator.js"></script>
+	<script src="js/Asset.js"></script>
 	<script>
 		var grid = new Grid({
 			width:		20,
 			height:		20
 		});
 		console.log(grid);
+
+		var testNode = grid.getNode(10, 10);
+		console.log(testNode);
+
+		var assetGen = new AssetGenerator({
+			name:	'testGen'
+		});
+		console.log(assetGen);
+		var testAsset = assetGen.createAsset({});
+
+		console.log( assetGen.getAsset( testAsset.handle ) );
 	</script>
 </head>
 <body>
