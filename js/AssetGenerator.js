@@ -1,24 +1,41 @@
-var AssetGenerator = function(config) {
-	var config = config || {};
-
-	this.assets		= {};
-	this.assetCounter	= 0;
-	this.name			= config.name;
+var AssetGenerator = function(assetClass) {
+	this.init(assetClass);
 };
 
-AssetGenerator.prototype.createAsset = function(assetConfig) {
-	assetConfig.handle = this.name + '-' + this.assetCounter;
+AssetGenerator.prototype.init = function(assetClass) {
+	var _assetClass	= assetClass;
+	var _assets		= {};
+	var _assetCounter	= 0;
+	//var _name			= config.name;
 
-	var asset = new Asset(assetConfig);
+	this.addAsset = function(assetConfig) {
+		var handle = assetConfig.name + '-' + _assetCounter;
 
-	this.addAsset(asset);
-	this.assetCounter++;
+		assetConfig.handle = handle;
 
-	return asset;
+		var asset = new _assetClass(assetConfig);
+
+		_assets[handle] = asset;
+		_assetCounter++;
+
+		return asset;
+	}
+
+	this.getAssets = function() {
+		return _assets;
+	}
+
+	this.eachAsset = function(callback) {
+		for(var handle in _assets) {
+			var asset = _assets[handle];
+
+			callback(asset, handle);
+		}
+	}
 }
 
-AssetGenerator.prototype.addAsset = function(asset) {
-	this.assets[asset.handle] = asset;
+AssetGenerator.prototype.reorderAsset = function() {
+	// ?????
 }
 
 AssetGenerator.prototype.getAsset = function(handle) {

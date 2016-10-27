@@ -16,3 +16,5 @@ const DIRECTIONS = {
 		y:	0
 	},
 };
+
+const APP_CONTAINER_ID = 'platformer-app-container';

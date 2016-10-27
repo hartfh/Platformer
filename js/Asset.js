@@ -1,10 +1,11 @@
+/*
 var Asset = function(config) {
+	var config = config || {};
+
 	this.init(config);
 };
 
 Asset.prototype.init = function(config) {
-	var config = config || {};
-
 	var _handle	= config.handle;
 	var _name		= config.name || '';
 	var _position	= config.position || {x: 0, y: 0};
@@ -18,3 +19,4 @@ Asset.prototype.init = function(config) {
 		return _handle;
 	}
 }
+*/

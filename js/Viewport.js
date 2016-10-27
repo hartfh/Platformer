@@ -1,13 +1,15 @@
 var Viewport = function(config) {
+	var config = config || {};
+
 	this.init(config);
 }
 
 Viewport.prototype.init = function(config) {
-	var config	= config || {};
 	var _height	= config.height || 0;			// Pixel height
 	var _width	= config.width || 0;			// Pixel width
 	var _pixelGrid	= config.pixelGrid;
 	var _position	= config.position || {x: 0, y: 0};	// Position within the PixelGrid
+	// var order/z-index
 
 	/**
 	 * Get the height and width.
