@@ -5,10 +5,13 @@ var Viewport = function(config) {
 }
 
 Viewport.prototype.init = function(config) {
+	var _name		= config.name || '';
 	var _height	= config.height || 0;			// Pixel height
 	var _width	= config.width || 0;			// Pixel width
 	var _pixelGrid	= config.pixelGrid;
-	var _position	= config.position || {x: 0, y: 0};	// Position within the PixelGrid
+	var _gridPos	= config.gridPosition || {x: 0, y: 0};	// Position within the PixelGrid
+	var _screenPos	= {}; // position of the Viewport element on the screen or within its parent container
+
 	// var order/z-index
 
 	/**
@@ -24,12 +27,21 @@ Viewport.prototype.init = function(config) {
 	}
 
 	/**
-	 * Get the position coordinates.
+	 * Return the grid position coordinates.
 	 *
 	 * @return	{object}
 	 */
-	this.getPosition = function() {
-		return _position;
+	this.getGridPosition = function() {
+		return _gridPos;
+	}
+
+	/**
+	 * Return the screen position coordinates.
+	 *
+	 * @return	{object}
+	 */
+	this.getScreenPosition = function() {
+		return _screenPos;
 	}
 
 	/**
@@ -60,6 +72,7 @@ Viewport.prototype.init = function(config) {
 			}
 		}
 	}
+
 	this.draw = function() {
 		// draw to multiple layers
 		// get all assets within viewport's dimensions

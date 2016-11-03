@@ -7,6 +7,7 @@ var PixelGrid = function(config) {
 PixelGrid.prototype.init = function(config) {
 	const _REGION_SIZE = 100;			// Pixel height and width of each region
 
+	var _name		= config.name || '';
 	var _height	= config.height || 0;	// Pixel width
 	var _width	= config.width || 0;	// Pixel height
 	var _regions	= [];				// 2-Dimensional array of objects referencing assets

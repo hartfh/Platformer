@@ -22,7 +22,7 @@
 	<script src="js/Viewport.js"></script>
 	<script src="js/Graph.js"></script>
 	<script src="js/Node.js"></script>
-	<script src="js/AssetGenerator.js"></script>
+	<script src="js/ComponentGenerator.js"></script>
 	<script src="js/Asset.js"></script>
 </head>
 <body>
@@ -35,87 +35,49 @@
 			}
 
 			var _self				= this;
-			var _layerGenerator		= new AssetGenerator(Layer);
-			var _viewportGenerator	= new AssetGenerator(Viewport);
-			var _pxGridGenerator	= new AssetGenerator(PixelGrid);
+			var _layerGenerator		= new ComponentGenerator(Layer);
+			var _viewportGenerator	= new ComponentGenerator(Viewport);
+			var _pxGridGenerator	= new ComponentGenerator(PixelGrid);
+			var _assetGenerator		= new ComponentGenerator(Asset);
 
-			// Consider having Layer, Viewport and Grid all extend a basic Asset class
+			// Consider having Layer, Viewport and Grid all extend a basic Component class
 
-			_pxGridGenerator.addAsset({
+			_pxGridGenerator.addComponent({
 				name:	'test-grid',
 				width:	880,
 				height:	540
 			});
-			_pxGridGenerator.addAsset({
-				name:	'test-gridXX',
-				width:	880,
-				height:	540
+			_layerGenerator.addComponent({
+				name:	'test-layer'
 			});
-
-			console.log( _pxGridGenerator.getAssets() );
-			console.log( _viewportGenerator.getAssets() );
-
-			_pxGridGenerator.eachAsset(function(asset, handle) {
-				console.log(asset);
-				console.log(handle);
+			_assetGenerator.addComponent({
+				name:	'test-asset'
 			})
 
-			/*
-			var _self		= this;
-			var _layers	= [];
-			var _viewports	= [];
-			var _grid		= {};
-			*/
+			console.log( _pxGridGenerator.getComponents() );
+			console.log( _layerGenerator.getComponents() );
+			console.log( _viewportGenerator.getComponents() );
+			console.log( _assetGenerator.getComponents() );
+
+			_pxGridGenerator.eachComponent(function(component, name) {
+				console.log(component);
+				console.log(name);
+			});
 
 			/*
-			this.eachViewport = function(callback) {
-				for(var i in _viewports) {
-					var viewport = _viewports[i];
-
-					callback(viewport);
-				}
-			}
-
-			this.addPixelGrid = function() {
-
-			}
-
-			this.addViewport = function(vportConfig) {
-				if( typeof(vportConfig) != 'object' ) {
-					throw('Viewport missing configuration object');
-				}
-
-				var viewport = new Viewport(vportConfig);
-
-				_viewports.push(viewport);
-
-				// consider how to re-order viewports
-			}
-
-			this.addLayer = function() {
-
-			}
 
 			// addLayer (need way to re-order layers?)
 
 			this.draw = function() {
 				_self.eachViewport(function(viewport) {
 					// draw all layers
+					// viewport.draw();
 				});
 			}
 			*/
 		};
 
 		var app = new PlatformerApp({});
-
-		var pxGrid = new PixelGrid({
-			width:	880,
-			height:	540
-		});
-
-		var testLayer = new Layer({
-			name:	'layer1'
-		});
 	</script>
 </body>
 </html>
