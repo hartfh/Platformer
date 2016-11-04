@@ -7,14 +7,19 @@ var Asset = function(config) {
 Asset.prototype.init = function(config) {
 	var _self		= this;
 	var _handle	= config.handle || '';
-	var _gridPos	= config.position || {x: 0, y: 0}; // grid coordinates
+	var _gridPos	= config.position || {x: 0, y: 0};		// PixelGrid coordinates
 	var _grid		= config.grid;						// Reference to the PixelGrid in which the Asset belongs
-	//var size = {}; // how much space the asset takes up in the pixelGrid (i.e. its "hitbox" and where its sprite will be drawn to)
+	var _height	= config.height || 1;				// Height of area to render the Asset's sprite
+	var _width	= config.width || 1;				// Width of area to render the Asset's sprite
+	var _hitboxes	= [];							// Array of objects, each with an origin, height and width. When combined they define an Asset's "hitbox"
 
+	// sprite (sprites should be defined elsewhere, and asset references that lookup table somehow. "type" and "sub-type"...?)
 	// other properties? solidity, affected by gravity (mass)
-	// properties for rendering asset (sprite, size??)
 	// descriptor properties (name, description)
 
+	/**
+	 * Cleans up any stray references to this Asset.
+	 */
 	_self.destroy = function() {
 		_grid.removeAssetFromRegion(_self);
 	}

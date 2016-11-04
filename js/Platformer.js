@@ -22,7 +22,9 @@ var PlatformerApp = function(config) {
 	var testAsset = _assetGenerator.addComponent({
 		handle:		'test-asset',
 		grid:		mainGrid,
-		position:		{x: 102, y: 102}
+		position:		{x: 102, y: 102},
+		height:		10,
+		width:		10
 	});
 	var vport = _viewportGenerator.addComponent({
 		handle:		'test-vport',
@@ -33,13 +35,11 @@ var PlatformerApp = function(config) {
 	});
 
 	_assetGenerator.eachComponent(function(component, handle) {
-		//console.log(component);
-		//console.log(handle);
+		console.log(component);
+		console.log(handle);
 	});
 
 	/*
-	// addLayer (need way to re-order layers?)
-
 	this.draw = function() {
 		_self.eachViewport(function(viewport) {
 			// draw all layers

@@ -4,54 +4,83 @@ var ComponentGenerator = function(ComponentClass) {
 
 ComponentGenerator.prototype.init = function(ComponentClass) {
 	var _self				= this;
-	var _ComponentClass		= ComponentClass;
-	var _Components		= {};
-	var _ComponentCounter	= 0;
+	var _ComponentClass		= ComponentClass;	// A class to be instantiated when adding components
+	var _components		= {};			// A container for all components tracked as they're generated
+	var _componentCounter	= 0;				// Used to create a unique ID for each component. Incremented with each new component
 
-	_self.addComponent = function(ComponentConfig) {
-		var handle = ComponentConfig.handle + '-' + _ComponentCounter;
+	/**
+	 * Instantiates a new object of type _ComponentClass and adds it to _components.
+	 *
+	 * @param		{object}	componentConfig	Configuration object for the component to be instantiated
+	 * @return	{object}
+	 */
+	_self.addComponent = function(componentConfig) {
+		var handle = componentConfig.handle + '-' + _componentCounter;
 
-		ComponentConfig.handle = handle;
+		componentConfig.handle = handle;
 
-		var Component = new _ComponentClass(ComponentConfig);
+		var component = new _ComponentClass(componentConfig);
 
-		_Components[handle] = Component;
-		_ComponentCounter++;
+		_components[handle] = component;
+		_componentCounter++;
 
-		return Component;
+		return component;
 	}
 
+	/**
+	 * Removes a component from the _components container.
+	 *
+	 * @param		{string}	handle	The component's handle
+	 */
 	_self.removeComponent = function(handle) {
-		if( _Components.hasOwnProperty(handle) ) {
-			var component = _Components[handle];
+		if( _components.hasOwnProperty(handle) ) {
+			var component = _components[handle];
 
 			component.destroy();
 
-			delete _Components[handle];
-
-			return true;
+			delete _components[handle];
 		}
-
-		return false;
 	}
 
+	/**
+	 * Get private _components property.
+	 *
+	 * @return	{object}
+	 */
 	_self.getComponents = function() {
-		return _Components;
+		return _components;
 	}
 
+	/**
+	 * Gets a component by its handle.
+	 *
+	 * @param		{string}	handle	The component's handle
+	 * @return	{object}			Returns false if no component by that handle exists
+	 */
 	_self.getComponent = function(handle) {
-		if( _Components.hasOwnProperty(handle) ) {
-			return _Components[handle];
+		if( _components.hasOwnProperty(handle) ) {
+			return _components[handle];
 		}
 
 		return false;
 	}
 
+	/**
+	 * Loops through all components and passes them to a callback function.
+	 *
+	 * @param		{function}	callback		A callback function. Gets passed a component and its handle as arguments. Returning false will break the loop.
+	 */
 	_self.eachComponent = function(callback) {
-		for(var handle in _Components) {
-			var Component = _Components[handle];
+		for(var handle in _components) {
+			var component	= _components[handle];
+			var response	= callback(component, handle);
 
-			callback(Component, handle);
+			// Break if the callback returns false
+			if( typeof(response) != 'undefined' ) {
+				if( !response ) {
+					break;
+				}
+			}
 		}
 	}
 }
