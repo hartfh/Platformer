@@ -5,21 +5,26 @@ var Viewport = function(config) {
 }
 
 Viewport.prototype.init = function(config) {
-	var _name		= config.name || '';
-	var _height	= config.height || 0;			// Pixel height
-	var _width	= config.width || 0;			// Pixel width
-	var _pixelGrid	= config.pixelGrid;
-	var _gridPos	= config.gridPosition || {x: 0, y: 0};	// Position within the PixelGrid
-	var _screenPos	= {}; // position of the Viewport element on the screen or within its parent container
+	var _self		= this;
+	var _handle	= config.handle || '';
+	var _height	= config.height || 0;				// Pixel height
+	var _width	= config.width || 0;				// Pixel width
+	var _grid		= config.grid;						// A PixelGrid object
+	var _gridPos	= config.gridPos || {x: 0, y: 0};		// Position within the PixelGrid
+	var _screenPos	= config.screenPos || {x: 0, y: 0};	// Position of the Viewport element on the screen or within its parent container
 
 	// var order/z-index
+
+	_self.destroy = function() {
+
+	}
 
 	/**
 	 * Get the height and width.
 	 *
 	 * @return	{object}
 	 */
-	this.getDimensions = function() {
+	_self.getDimensions = function() {
 		return {
 			height:	_height,
 			width:	_width
@@ -31,7 +36,7 @@ Viewport.prototype.init = function(config) {
 	 *
 	 * @return	{object}
 	 */
-	this.getGridPosition = function() {
+	_self.getGridPosition = function() {
 		return _gridPos;
 	}
 
@@ -40,7 +45,7 @@ Viewport.prototype.init = function(config) {
 	 *
 	 * @return	{object}
 	 */
-	this.getScreenPosition = function() {
+	_self.getScreenPosition = function() {
 		return _screenPos;
 	}
 
@@ -49,35 +54,40 @@ Viewport.prototype.init = function(config) {
 	 *
 	 * @param		{string}	direction
 	 */
-	this.shift = function(direction) {
+	_self.shift = function(direction) {
 		if( DIRECTIONS.hasOwnProperty(direction) ) {
 			var adjust	= DIRECTIONS[direction];
-			var pxDims	= _pixelGrid.getDimensions();
+			var pxDims	= _grid.getDimensions();
 
-			_position.x += adjust.x;
-			_position.y += adjust.y;
+			_gridPos.x += adjust.x;
+			_gridPos.y += adjust.y;
 
 			// Ensure the viewport remaims within its PixelGrid's boundaries
-			if( _position.x < 0 ) {
-				_position.x = 0;
+			if( _gridPos.x < 0 ) {
+				_gridPos.x = 0;
 			}
-			if( _position.y < 0 ) {
-				_position.y = 0;
+			if( _gridPos.y < 0 ) {
+				_gridPos.y = 0;
 			}
-			if( _position.x >= pxDims.width ) {
-				_position.x = pxDims.width - 1;
+			if( _gridPos.x >= pxDims.width ) {
+				_gridPos.x = pxDims.width - 1;
 			}
-			if( _position.x >= pxDims.height ) {
-				_position.x = pxDims.height - 1;
+			if( _gridPos.x >= pxDims.height ) {
+				_gridPos.x = pxDims.height - 1;
 			}
 		}
 	}
 
-	this.draw = function() {
+	_self.getVisibleAssets = function() {
+
+		// get all assets within regions
+	}
+
+	_self.draw = function() {
 		// draw to multiple layers
 		// get all assets within viewport's dimensions
 		// think up an efficient way to store the location of assets.
 		//	-consider multiple area "buckets" that contain approximate locations of each asset.
-		//	-can simply get check assets in those buckets, rather than checking ALL assets
+		//	-can simply get assets in those buckets, rather than checking ALL assets
 	}
 }

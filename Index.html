@@ -20,63 +20,16 @@
 	<script src="js/PixelGrid.js"></script>
 	<script src="js/Layer.js"></script>
 	<script src="js/Viewport.js"></script>
-	<script src="js/Graph.js"></script>
-	<script src="js/Node.js"></script>
 	<script src="js/ComponentGenerator.js"></script>
 	<script src="js/Asset.js"></script>
+	<script src="js/Platformer.js"></script>
+	<!-- <script src="js/Graph.js"></script> -->
+	<!-- <script src="js/Node.js"></script> -->
 </head>
 <body>
 	<div id="platformer-app-container"></div>
 
 	<script>
-		var PlatformerApp = function(config) {
-			if( typeof(config) != 'object' ) {
-				throw('PlatformerApp missing required parameters for configuration.');
-			}
-
-			var _self				= this;
-			var _layerGenerator		= new ComponentGenerator(Layer);
-			var _viewportGenerator	= new ComponentGenerator(Viewport);
-			var _pxGridGenerator	= new ComponentGenerator(PixelGrid);
-			var _assetGenerator		= new ComponentGenerator(Asset);
-
-			// Consider having Layer, Viewport and Grid all extend a basic Component class
-
-			_pxGridGenerator.addComponent({
-				name:	'test-grid',
-				width:	880,
-				height:	540
-			});
-			_layerGenerator.addComponent({
-				name:	'test-layer'
-			});
-			_assetGenerator.addComponent({
-				name:	'test-asset'
-			})
-
-			console.log( _pxGridGenerator.getComponents() );
-			console.log( _layerGenerator.getComponents() );
-			console.log( _viewportGenerator.getComponents() );
-			console.log( _assetGenerator.getComponents() );
-
-			_pxGridGenerator.eachComponent(function(component, name) {
-				console.log(component);
-				console.log(name);
-			});
-
-			/*
-
-			// addLayer (need way to re-order layers?)
-
-			this.draw = function() {
-				_self.eachViewport(function(viewport) {
-					// draw all layers
-					// viewport.draw();
-				});
-			}
-			*/
-		};
-
 		var app = new PlatformerApp({});
 	</script>
 </body>

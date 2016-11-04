@@ -3,13 +3,13 @@ var ComponentGenerator = function(ComponentClass) {
 };
 
 ComponentGenerator.prototype.init = function(ComponentClass) {
+	var _self				= this;
 	var _ComponentClass		= ComponentClass;
 	var _Components		= {};
 	var _ComponentCounter	= 0;
-	//var _name			= config.name;
 
-	this.addComponent = function(ComponentConfig) {
-		var handle = ComponentConfig.name + '-' + _ComponentCounter;
+	_self.addComponent = function(ComponentConfig) {
+		var handle = ComponentConfig.handle + '-' + _ComponentCounter;
 
 		ComponentConfig.handle = handle;
 
@@ -21,11 +21,33 @@ ComponentGenerator.prototype.init = function(ComponentClass) {
 		return Component;
 	}
 
-	this.getComponents = function() {
+	_self.removeComponent = function(handle) {
+		if( _Components.hasOwnProperty(handle) ) {
+			var component = _Components[handle];
+
+			component.destroy();
+
+			delete _Components[handle];
+
+			return true;
+		}
+
+		return false;
+	}
+
+	_self.getComponents = function() {
 		return _Components;
 	}
 
-	this.eachComponent = function(callback) {
+	_self.getComponent = function(handle) {
+		if( _Components.hasOwnProperty(handle) ) {
+			return _Components[handle];
+		}
+
+		return false;
+	}
+
+	_self.eachComponent = function(callback) {
 		for(var handle in _Components) {
 			var Component = _Components[handle];
 
@@ -36,22 +58,4 @@ ComponentGenerator.prototype.init = function(ComponentClass) {
 
 ComponentGenerator.prototype.reorderComponent = function() {
 	// ?????
-}
-
-ComponentGenerator.prototype.getComponent = function(handle) {
-	if( this.Components.hasOwnProperty(handle) ) {
-		return this.Components[handle];
-	}
-
-	return false;
-}
-
-ComponentGenerator.prototype.removeComponent = function(handle) {
-	if( this.Components.hasOwnProperty(handle) ) {
-		delete this.Components[handle];
-
-		return true;
-	}
-
-	return false;
 }

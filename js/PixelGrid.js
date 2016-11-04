@@ -7,12 +7,17 @@ var PixelGrid = function(config) {
 PixelGrid.prototype.init = function(config) {
 	const _REGION_SIZE = 100;			// Pixel height and width of each region
 
-	var _name		= config.name || '';
+	var _self		= this;
+	var _handle	= config.handle || '';
 	var _height	= config.height || 0;	// Pixel width
 	var _width	= config.width || 0;	// Pixel height
 	var _regions	= [];				// 2-Dimensional array of objects referencing assets
 
-	this.createRegions = function() {
+	_self.destroy = function() {
+
+	}
+
+	_self.createRegions = function() {
 		for(var x = 0; x < _width; x += _REGION_SIZE) {
 			var column = [];
 
@@ -31,7 +36,7 @@ PixelGrid.prototype.init = function(config) {
 	 * @param		{integer}	y	Y-coordinate in pixels
 	 * @return	{object}		Region bucket object
 	 */
-	this.getRegion = function(x, y) {
+	_self.getRegion = function(x, y) {
 		var bucket = {
 			x:	Math.floor(x / _REGION_SIZE),
 			y:	Math.floor(y / _REGION_SIZE)
@@ -44,12 +49,31 @@ PixelGrid.prototype.init = function(config) {
 	 * Remove an asset from _regions.
 	 *
 	 * @param		{object}	asset	Asset object
+	 */
+	_self.removeAssetFromRegions = function(asset) {
+		for(var i in _regions) {
+			var regionGroup = _regions[i];
+
+			for(var j in regionGroup) {
+				var region = regionGroup[j];
+
+				if( _self.regionHasAsset(asset, region) ) {
+					_self.removeAssetFromRegion(asset, region);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Remove an asset from one region.
+	 *
+	 * @param		{object}	asset	Asset object
+	 * @param		{object}	region	Region object
 	 * @return	{boolean}			Return true/false on success or failure
 	 */
-	this.removeAssetFromRegion = function(asset) {
+	_self.removeAssetFromRegion = function(asset, region) {
 		var assetCoords	= asset.getPosition();
 		var assetHandle	= asset.getHandle();
-		var region		= this.getRegion(assetCoords.x, assetCoords.y);
 
 		if( region.hasOwnProperty(assetHandle) ) {
 			delete region[assetHandle];
@@ -66,10 +90,10 @@ PixelGrid.prototype.init = function(config) {
 	 * @param		{object}	asset	Asset object
 	 * @return	{boolean}			Return true/false on success or failure
 	 */
-	this.addAssetToRegion = function(asset) {
+	_self.addAssetToRegions = function(asset) {
 		var assetCoords	= asset.getPosition();
 		var assetHandle	= asset.getHandle();
-		var region		= this.getRegion(assetCoords.x, assetCoords.y);
+		var region		= _self.getRegion(assetCoords.x, assetCoords.y);
 
 		if( !region.hasOwnProperty(assetHandle) ) {
 			region[assetHandle] = asset;
@@ -80,12 +104,36 @@ PixelGrid.prototype.init = function(config) {
 		return false;
 	}
 
+	_self.regionHasAsset = function(asset, region) {
+		var assetHandle = asset.getHandle();
+
+		if( region.hasOwnProperty(assetHandle) ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	_self.checkRegion = function(asset) {
+		if( _self.assetRegionNeedsUpdate(asset) ) {
+			_self.removeAssetFromRegions(asset);
+			_self.addAssetToRegions(asset);
+		}
+	}
+
+	_self.assetRegionNeedsUpdate = function(asset) {
+		var assetCoords	= asset.getPosition();
+		var region		= _self.getRegion(assetCoords.x, assetCoords.y);
+
+		return !_self.regionHasAsset(asset, region);
+	}
+
 	/**
 	 * Get the height and width.
 	 *
 	 * @return	{object}
 	 */
-	this.getDimensions = function() {
+	_self.getDimensions = function() {
 		return {
 			height:	_height,
 			width:	_width
@@ -97,9 +145,9 @@ PixelGrid.prototype.init = function(config) {
 	 *
 	 * @return	{integer}
 	 */
-	this.getRegionSize = function() {
+	_self.getRegionSize = function() {
 		return _REGION_SIZE;
 	}
 
-	this.createRegions();
+	_self.createRegions();
 }
