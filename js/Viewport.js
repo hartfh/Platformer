@@ -72,14 +72,13 @@ Viewport.prototype.init = function(config) {
 			if( _gridPos.x >= pxDims.width ) {
 				_gridPos.x = pxDims.width - 1;
 			}
-			if( _gridPos.x >= pxDims.height ) {
-				_gridPos.x = pxDims.height - 1;
+			if( _gridPos.y >= pxDims.height ) {
+				_gridPos.y = pxDims.height - 1;
 			}
 		}
 	}
 
 	_self.getVisibleAssets = function() {
-
 		// get all assets within regions
 	}
 

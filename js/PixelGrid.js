@@ -11,12 +11,15 @@ PixelGrid.prototype.init = function(config) {
 	var _handle	= config.handle || '';
 	var _height	= config.height || 0;	// Pixel width
 	var _width	= config.width || 0;	// Pixel height
-	var _regions	= [];				// 2-Dimensional array of objects referencing assets
+	var _regions	= [];				// 2-Dimensional array of objects with references to assets
 
 	_self.destroy = function() {
 
 	}
 
+	/**
+	 * Sets up 2-dimensional array of objects.
+	 */
 	_self.createRegions = function() {
 		for(var x = 0; x < _width; x += _REGION_SIZE) {
 			var column = [];
@@ -68,7 +71,7 @@ PixelGrid.prototype.init = function(config) {
 	 * Remove an asset from one region.
 	 *
 	 * @param		{object}	asset	Asset object
-	 * @param		{object}	region	Region object
+	 * @param		{object}	region	A _regions object container
 	 * @return	{boolean}			Return true/false on success or failure
 	 */
 	_self.removeAssetFromRegion = function(asset, region) {
@@ -85,10 +88,9 @@ PixelGrid.prototype.init = function(config) {
 	}
 
 	/**
-	 * Add an asset to _regions.
+	 * Add an asset to _regions. Automatically detects which region the asset should be added to.
 	 *
 	 * @param		{object}	asset	Asset object
-	 * @return	{boolean}			Return true/false on success or failure
 	 */
 	_self.addAssetToRegions = function(asset) {
 		var assetCoords	= asset.getPosition();
@@ -97,13 +99,15 @@ PixelGrid.prototype.init = function(config) {
 
 		if( !region.hasOwnProperty(assetHandle) ) {
 			region[assetHandle] = asset;
-
-			return true;
 		}
-
-		return false;
 	}
 
+	/**
+	 * Check if a region references an asset.
+	 *
+	 * @param		{object}	asset	Asset object
+	 * @param		{object}	region	A _regions object container
+	 */
 	_self.regionHasAsset = function(asset, region) {
 		var assetHandle = asset.getHandle();
 
@@ -114,6 +118,11 @@ PixelGrid.prototype.init = function(config) {
 		return false;
 	}
 
+	/**
+	 * Updates which part of _regions an Asset falls into if necessary.
+	 *
+	 * @param		{object}	asset	Asset object
+	 */
 	_self.checkRegion = function(asset) {
 		if( _self.assetRegionNeedsUpdate(asset) ) {
 			_self.removeAssetFromRegions(asset);
@@ -121,6 +130,12 @@ PixelGrid.prototype.init = function(config) {
 		}
 	}
 
+	/**
+	 * Check if an Asset is in an incorrect _regions container.
+	 *
+	 * @param		{object}	asset	Asset object
+	 * @return	{boolean}
+	 */
 	_self.assetRegionNeedsUpdate = function(asset) {
 		var assetCoords	= asset.getPosition();
 		var region		= _self.getRegion(assetCoords.x, assetCoords.y);
