@@ -18,22 +18,24 @@ Layer.prototype.init = function(config) {
 		return _handle;
 	}
 
-	_self.draw = function(assets, area) {
-		// need clear boundaries
-		_self.clear(area);
-		_self.drawAssets(assets);
+	_self.draw = function() {
+
 	}
 
 	_self.clear = function(area) {
-		// clear area if specified. otherwise clear entire layer?
-	}
-
-	_self.drawAssets = function(assets) {
-
+		// clear area if specified.
+		// otherwise clear entire layer
 	}
 
 	_self.drawAsset = function(asset) {
+		console.log('drawing asset');
+		var area = '';
+		var position = '';
 
+		// area is a combination of position, hitbox(?) and viewport position/screen location
+
+		_self.clear(area);
+		_self.draw();
 	}
 
 	_self.destroy = function() {

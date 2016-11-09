@@ -78,6 +78,11 @@ Viewport.prototype.init = function(config) {
 		}
 	}
 
+	_self.draw = function(layers) {
+		// pass viewport boundaries to layers
+		// each layer draws its assets
+	}
+
 	// get all assets within regions, and each asset within that region
 	_self.getVisibleAssets = function() {
 		var start		= _gridPos;
@@ -98,8 +103,16 @@ Viewport.prototype.init = function(config) {
 		return assets;
 	}
 
-	_self.draw = function(layers) {
-		var assets		= _self.getVisibleAssets();
+	_self.draw = function() {
+		var assets = _self.getVisibleAssets();
+
+		for(var i in assets) {
+			var asset = assets[i];
+
+			asset.getLayer().drawAsset(asset);
+		}
+
+		/*
 		var layerGroups	= {};
 
 		for(var i in layers) {
@@ -120,6 +133,7 @@ Viewport.prototype.init = function(config) {
 
 			layer.drawAssets(layerAssets, area);
 		}
+		*/
 
 		// layer.drawAssets(assets);
 

@@ -56,16 +56,16 @@ Asset.prototype.init = function(config) {
 		_grid.checkRegion(_self);
 	}
 
-	_self.getLayer = function() {
-		return _layer;
-	}
-
 	_self.getPosition = function() {
 		return _gridPos;
 	}
 
 	_self.getHandle = function() {
 		return _handle;
+	}
+
+	_self.getLayer = function() {
+		return _layer;
 	}
 
 	_grid.addAssetToRegions(_self);
