@@ -16,35 +16,33 @@ var PlatformerApp = function(config) {
 		width:		880,
 		height:		540
 	});
-	_layerGenerator.addComponent({
+	var testLayer = _layerGenerator.addComponent({
 		handle:		'test-layer'
 	});
 	var testAsset = _assetGenerator.addComponent({
 		handle:		'test-asset',
 		grid:		mainGrid,
+		layer:		testLayer.getHandle(),
 		position:		{x: 102, y: 102},
 		height:		10,
 		width:		10
 	});
 	var vport = _viewportGenerator.addComponent({
 		handle:		'test-vport',
-		height:		300,
-		width:		300,
+		height:		120,
+		width:		120,
 		grid:		mainGrid,
-		gridPos:		{x: 20, y: 20}
+		gridPos:		{x: 1, y: 1}
 	});
 
-	_assetGenerator.eachComponent(function(component, handle) {
-		console.log(component);
-		console.log(handle);
-	});
+	_self.draw = function(layerHandles) {
+		// TODO: determine which viewports need to be redrawn. or have them specified in arguments
+		var layers = _layerGenerator.getComponents();
 
-	/*
-	this.draw = function() {
-		_self.eachViewport(function(viewport) {
-			// draw all layers
-			// viewport.draw();
+		_viewportGenerator.eachComponent(function(viewport, handle) {
+			viewport.draw(layers);
 		});
 	}
-	*/
+
+	_self.draw();
 };

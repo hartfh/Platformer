@@ -9,9 +9,10 @@ Asset.prototype.init = function(config) {
 	var _handle	= config.handle || '';
 	var _gridPos	= config.position || {x: 0, y: 0};		// PixelGrid coordinates
 	var _grid		= config.grid;						// Reference to the PixelGrid in which the Asset belongs
+	var _layer	= config.layer;					// Handle of the Layer on which the Asset should be drawn
 	var _height	= config.height || 1;				// Height of area to render the Asset's sprite
 	var _width	= config.width || 1;				// Width of area to render the Asset's sprite
-	var _hitboxes	= [];							// Array of objects, each with an origin, height and width. When combined they define an Asset's "hitbox"
+	var _hitboxes	= [];							// Array of objects, each with an origin, height and width. When combined they define an Asset's "hitbox". Points relative to asset's own grid position
 
 	// sprite (sprites should be defined elsewhere, and asset references that lookup table somehow. "type" and "sub-type"...?)
 	// other properties? solidity, affected by gravity (mass)
@@ -38,11 +39,11 @@ Asset.prototype.init = function(config) {
 			_gridPos.y += adjust.y;
 
 			// Ensure the asset remaims within its PixelGrid's boundaries
-			if( _gridPos.x < 0 ) {
-				_gridPos.x = 0;
+			if( _gridPos.x < 1 ) {
+				_gridPos.x = 1;
 			}
-			if( _gridPos.y < 0 ) {
-				_gridPos.y = 0;
+			if( _gridPos.y < 1 ) {
+				_gridPos.y = 1;
 			}
 			if( _gridPos.x >= pxDims.width ) {
 				_gridPos.x = pxDims.width - 1;
@@ -53,6 +54,10 @@ Asset.prototype.init = function(config) {
 		}
 
 		_grid.checkRegion(_self);
+	}
+
+	_self.getLayer = function() {
+		return _layer;
 	}
 
 	_self.getPosition = function() {

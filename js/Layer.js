@@ -14,8 +14,26 @@ Layer.prototype.init = function(config) {
 	var _ctx		= _elem.getContext('2d');
 	// var order/z-index
 
-	_self.draw = function() {
-		// get viewports and draw those
+	_self.getHandle = function() {
+		return _handle;
+	}
+
+	_self.draw = function(assets, area) {
+		// need clear boundaries
+		_self.clear(area);
+		_self.drawAssets(assets);
+	}
+
+	_self.clear = function(area) {
+		// clear area if specified. otherwise clear entire layer?
+	}
+
+	_self.drawAssets = function(assets) {
+
+	}
+
+	_self.drawAsset = function(asset) {
+
 	}
 
 	_self.destroy = function() {

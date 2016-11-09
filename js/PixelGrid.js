@@ -41,11 +41,37 @@ PixelGrid.prototype.init = function(config) {
 	 */
 	_self.getRegion = function(x, y) {
 		var bucket = {
-			x:	Math.floor(x / _REGION_SIZE),
-			y:	Math.floor(y / _REGION_SIZE)
+			x:	Math.floor( (x - 1) / _REGION_SIZE ),
+			y:	Math.floor( (y - 1) / _REGION_SIZE )
 		};
 
 		return _regions[bucket.x][bucket.y];
+	}
+
+	/**
+	 * Get all regions that fall within a rectangular area created by two points.
+	 *
+	 * @param		{object}	start	Start coordinates
+	 * @param		{object}	end		End coordinates
+	 * @return	{array}			An array of region objects. Returns an empty array if no regions found.
+	 */
+	_self.getRegionsWithin = function(start, end) {
+		if( arguments.length != 2 ) {
+			throw new Error('Must provide exactly two point arguments.');
+		}
+
+		var regions	= [];
+		var sequenced	= sequencePoints(start, end);
+		var start		= sequenced.start;
+		var end		= sequenced.end;
+
+		for(var x = start.x; x <= end.x; x += _REGION_SIZE) {
+			for(var y = start.y; y <= end.y; y += _REGION_SIZE) {
+				regions.push( _self.getRegion(x, y) );
+			}
+		}
+
+		return regions;
 	}
 
 	/**
