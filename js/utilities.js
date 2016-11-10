@@ -38,3 +38,10 @@ function sequencePoints(first, second) {
 		end:		end
 	}
 }
+
+function getSpriteImage(code) {
+	var path		= 'assets/';
+	var spriteImg	= path + SPRITE_KEY[code];
+
+	return spriteImg;
+}

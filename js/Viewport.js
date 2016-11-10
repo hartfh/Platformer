@@ -7,8 +7,8 @@ var Viewport = function(config) {
 Viewport.prototype.init = function(config) {
 	var _self		= this;
 	var _handle	= config.handle || '';
-	var _height	= config.height || 0;				// Pixel height
-	var _width	= config.width || 0;				// Pixel width
+	var _height	= config.height || 0;				// Screen pixel height
+	var _width	= config.width || 0;				// Screen pixel width
 	var _grid		= config.grid;						// A PixelGrid object
 	var _gridPos	= config.gridPos || {x: 1, y: 1};		// Position within the PixelGrid
 	var _screenPos	= config.screenPos || {x: 0, y: 0};	// Position of the Viewport element on the screen or within its parent container
@@ -78,11 +78,6 @@ Viewport.prototype.init = function(config) {
 		}
 	}
 
-	_self.draw = function(layers) {
-		// pass viewport boundaries to layers
-		// each layer draws its assets
-	}
-
 	// get all assets within regions, and each asset within that region
 	_self.getVisibleAssets = function() {
 		var start		= _gridPos;
@@ -109,36 +104,7 @@ Viewport.prototype.init = function(config) {
 		for(var i in assets) {
 			var asset = assets[i];
 
-			asset.getLayer().drawAsset(asset);
+			asset.getLayer().drawAsset(asset, _gridPos);
 		}
-
-		/*
-		var layerGroups	= {};
-
-		for(var i in layers) {
-			layerGroups[i] = [];
-		}
-
-		for(var i in assets) {
-			var asset = assets[i];
-
-			layerGroups[ asset.getLayer() ].push(asset);
-		}
-
-		var area = '???????'; // viewport boundaries
-
-		for(var i in layerGroups) {
-			var layer			= layers[i];
-			var layerAssets	= layerGroups[i];
-
-			layer.drawAssets(layerAssets, area);
-		}
-		*/
-
-		// layer.drawAssets(assets);
-
-		// group assets by layer??
-
-		// redraw each layer within viewport bounds according to layer order
 	}
 }

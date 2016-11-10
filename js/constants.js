@@ -17,4 +17,10 @@ const DIRECTIONS = {
 	},
 };
 
+const SPRITE_KEY = {
+	'background':		'test-sprite-2.png',
+	'error':			'test-sprite-3.png',
+	'player':			'test-sprite-1.png'
+};
+
 const APP_CONTAINER_ID = 'platformer-app-container';

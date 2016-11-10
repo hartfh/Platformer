@@ -17,7 +17,9 @@ var PlatformerApp = function(config) {
 		height:		540
 	});
 	var testLayer = _layerGenerator.addComponent({
-		handle:		'test-layer'
+		handle:		'test-layer',
+		height:		900,
+		width:		1200
 	});
 	var testAsset = _assetGenerator.addComponent({
 		handle:		'test-asset',
@@ -25,14 +27,15 @@ var PlatformerApp = function(config) {
 		layer:		testLayer,
 		position:		{x: 102, y: 102},
 		height:		10,
-		width:		10
+		width:		10,
+		sprite:		'player'
 	});
 	var vport = _viewportGenerator.addComponent({
 		handle:		'test-vport',
 		height:		120,
 		width:		120,
 		grid:		mainGrid,
-		gridPos:		{x: 1, y: 1}
+		gridPos:		{x: 10, y: 10}
 	});
 
 	_self.draw = function() {

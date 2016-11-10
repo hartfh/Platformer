@@ -7,8 +7,10 @@ var Layer = function(config) {
 Layer.prototype.init = function(config) {
 	var _self		= this;
 	var _handle	= config.handle || '';
+	var _height	= config.height || 0;		// Screen pixel height
+	var _width	= config.width || 0;		// Screen pixel width
 
-	jQuery('#' + APP_CONTAINER_ID).append('<canvas id="' + _handle + '" width="1200" height="900" />');
+	jQuery('#' + APP_CONTAINER_ID).append('<canvas id="' + _handle + '" width="' + _width + '" height="' + _height + '" />');
 
 	var _elem		= document.getElementById(_handle);
 	var _ctx		= _elem.getContext('2d');
@@ -18,27 +20,25 @@ Layer.prototype.init = function(config) {
 		return _handle;
 	}
 
-	_self.draw = function() {
+	_self.drawAsset = function(asset, offset) {
+		if( typeof(offset) == 'undefined' ) {
+			var offset = {x: 0, y: 0};
+		}
 
-	}
+		var assetOrigin	= asset.getPosition();
+		var assetDims		= asset.getDimensions();
+		var renderOrigin	= {x: assetOrigin.x + offset.x, y: assetOrigin.x + offset.y};
+		var spriteSrc		= asset.getSprite();
+		var img			= new Image();
 
-	_self.clear = function(area) {
-		// clear area if specified.
-		// otherwise clear entire layer
-	}
+		img.src = spriteSrc;
 
-	_self.drawAsset = function(asset) {
-		console.log('drawing asset');
-		var area = '';
-		var position = '';
-
-		// area is a combination of position, hitbox(?) and viewport position/screen location
-
-		_self.clear(area);
-		_self.draw();
+		_ctx.clearRect(renderOrigin.x, renderOrigin.y, assetDims.width, assetDims.height);
+		_ctx.drawImage(img, renderOrigin.x, renderOrigin.y);
 	}
 
 	_self.destroy = function() {
-		// remove from DOM
+		// Remove the canvas element from the DOM
+		_elem.remove();
 	}
 }
