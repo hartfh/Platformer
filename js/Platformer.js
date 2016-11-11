@@ -25,23 +25,22 @@ var PlatformerApp = function(config) {
 		handle:		'test-asset',
 		grid:		mainGrid,
 		layer:		testLayer,
-		position:		{x: 1, y: 1},
+		position:		{x: 70, y: 80},
 		height:		32,
 		width:		32,
 		sprite:		'player'
 	});
 	var vport = _viewportGenerator.addComponent({
 		handle:		'test-vport',
-		height:		120,
-		width:		120,
+		height:		100,
+		width:		100,
 		grid:		mainGrid,
-		gridPos:		{x: 10, y: 10},
+		gridPos:		{x: 1, y: 1},
 		screenPos:	{x: 1, y: 1}
 	});
 
 	_self.draw = function() {
 		// TODO: determine which viewports need to be redrawn. or have them specified in arguments
-		//var layers = _layerGenerator.getComponents();
 
 		_viewportGenerator.eachComponent(function(viewport, handle) {
 			viewport.draw();

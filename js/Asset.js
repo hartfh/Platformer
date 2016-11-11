@@ -77,6 +77,18 @@ Asset.prototype.init = function(config) {
 		return dimensions;
 	}
 
+	_self.getBounds = function() {
+		var start		= _gridPos;
+		var end		= {x: _gridPos.x + _width, y: _gridPos.y + _height};
+
+		var bounds	= {
+			start:	start,
+			end:		end
+		};
+
+		return bounds;
+	}
+
 	_self.getSprite = function() {
 		var sprite = getSpriteImage(_sprite);
 

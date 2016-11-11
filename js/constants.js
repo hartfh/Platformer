@@ -17,6 +17,8 @@ const DIRECTIONS = {
 	},
 };
 
+const SPRITE_SIZE = 32;
+
 const SPRITE_KEY = {
 	'background':		'test-sprite-2.png',
 	'error':			'test-sprite-3.png',
