@@ -27,14 +27,16 @@ Layer.prototype.init = function(config) {
 
 		var assetOrigin	= asset.getPosition();
 		var assetDims		= asset.getDimensions();
-		var renderOrigin	= {x: assetOrigin.x + offset.x, y: assetOrigin.x + offset.y};
+		var renderOrigin	= {x: assetOrigin.x + offset.x - 2 , y: assetOrigin.x + offset.y - 2};
 		var spriteSrc		= asset.getSprite();
 		var img			= new Image();
 
 		img.src = spriteSrc;
-
+		
+		// Two pixel offset. One for referring to origin as (1,1) rather than (0,0) and one for drawing from the top-right of the pixel space on the screen.
 		_ctx.clearRect(renderOrigin.x, renderOrigin.y, assetDims.width, assetDims.height);
 		_ctx.drawImage(img, renderOrigin.x, renderOrigin.y);
+		// TODO: need to slice image if it falls outside viewport
 	}
 
 	_self.destroy = function() {

@@ -39,9 +39,19 @@ function sequencePoints(first, second) {
 	}
 }
 
+/**
+ * Translates a sprite code into a path to an image file.
+ *
+ * @param		{string}	code		The sprite's key in the SPRITE_KEY lookup table
+ * @return	{string}			An image file path
+ */
 function getSpriteImage(code) {
-	var path		= 'assets/';
-	var spriteImg	= path + SPRITE_KEY[code];
+	if( typeof(code) != 'string' || !SPRITE_KEY.hasOwnProperty(code) ) {
+		throw new Error('Sprite code does not refer to an image file. Check Asset configuration or SPRITE_KEY.');
+	}
 
-	return spriteImg;
+	var directory	= 'assets/';
+	var spritePath	= directory + SPRITE_KEY[code];
+
+	return spritePath;
 }

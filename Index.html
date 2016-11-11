@@ -1,35 +1,45 @@
 <html>
-<title>Platformer</title>
-<head>
-	<style>
-		html {
-			background: #151515;
-		}
-		canvas {
-			border: 1px solid white;
-			width: 1100px;
-		}
-	</style>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-	<script src="js/constants.js"></script>
-	<script src="js/utilities.js"></script>
-	<script src="js/PixelGrid.js"></script>
-	<script src="js/Layer.js"></script>
-	<script src="js/Viewport.js"></script>
-	<script src="js/ComponentGenerator.js"></script>
-	<script src="js/Asset.js"></script>
-	<script src="js/Platformer.js"></script>
-	<!-- <script src="js/Graph.js"></script> -->
-	<!-- <script src="js/Node.js"></script> -->
-</head>
-<body>
-	<img alt="" src="assets/test-sprite-1.png" />
-	<img alt="" src="assets/test-sprite-2.png" />
-	<img alt="" src="assets/test-sprite-3.png" />
-	<div id="platformer-app-container"></div>
+	<title>Platformer</title>
+	<head>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+			}
+			html {
+				background: #a0a0a0;
+			}
+			canvas {
+				background: #000000;
+				margin-left: 10px;
+			}
+		</style>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+		<script src="js/constants.js"></script>
+		<script src="js/utilities.js"></script>
+		<script src="js/PixelGrid.js"></script>
+		<script src="js/Layer.js"></script>
+		<script src="js/Viewport.js"></script>
+		<script src="js/ComponentGenerator.js"></script>
+		<script src="js/Asset.js"></script>
+		<script src="js/Platformer.js"></script>
+		<!-- <script src="js/Graph.js"></script> -->
+		<!-- <script src="js/Node.js"></script> -->
+	</head>
+	<body>
+		<header>
+		</header>
+		<main>
+			<img alt="" src="assets/test-sprite-1.png" />
+			<img alt="" src="assets/test-sprite-2.png" />
+			<img alt="" src="assets/test-sprite-3.png" />
 
-	<script>
-		var app = new PlatformerApp({});
-	</script>
-</body>
+			<div id="platformer-app-container"></div>
+		</main>
+		<footer>
+			<script>
+				var app = new PlatformerApp({});
+			</script>
+		</footer>
+	</body>
 </html>

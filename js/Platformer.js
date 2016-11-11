@@ -25,9 +25,9 @@ var PlatformerApp = function(config) {
 		handle:		'test-asset',
 		grid:		mainGrid,
 		layer:		testLayer,
-		position:		{x: 102, y: 102},
-		height:		10,
-		width:		10,
+		position:		{x: 1, y: 1},
+		height:		32,
+		width:		32,
 		sprite:		'player'
 	});
 	var vport = _viewportGenerator.addComponent({
@@ -35,7 +35,8 @@ var PlatformerApp = function(config) {
 		height:		120,
 		width:		120,
 		grid:		mainGrid,
-		gridPos:		{x: 10, y: 10}
+		gridPos:		{x: 10, y: 10},
+		screenPos:	{x: 1, y: 1}
 	});
 
 	_self.draw = function() {

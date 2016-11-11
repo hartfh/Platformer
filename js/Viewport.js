@@ -104,7 +104,7 @@ Viewport.prototype.init = function(config) {
 		for(var i in assets) {
 			var asset = assets[i];
 
-			asset.getLayer().drawAsset(asset, _gridPos);
+			asset.getLayer().drawAsset(asset, _screenPos);
 		}
 	}
 }

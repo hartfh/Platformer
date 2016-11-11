@@ -13,10 +13,8 @@ Asset.prototype.init = function(config) {
 	var _height	= config.height || 1;				// Height of area to render the Asset's sprite
 	var _width	= config.width || 1;				// Width of area to render the Asset's sprite
 	var _hitboxes	= [];							// Array of objects, each with an origin, height and width. When combined they define an Asset's "hitbox". Points relative to asset's own grid position
-	var _sprite	= config.sprite || 'error';
+	var _sprite	= config.sprite || 'error';			// A code in the sprite lookup table
 
-	// TODO: change _grid to be the grid handle, not reference to actual PixelGrid object
-	// sprite (sprites should be defined elsewhere, and asset references that lookup table somehow. "type" and "sub-type"...?)
 	// other properties? solidity, affected by gravity (mass)
 	// descriptor properties (name, description)
 
