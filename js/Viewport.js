@@ -31,11 +31,16 @@ Viewport.prototype.init = function(config) {
 		};
 	}
 
-	_self.getBounds = function() {
+	/**
+	 *
+	 *
+	 * @return	{object}					Object container "start" and "end" coordinate objects
+	 */
+	_self.getBounds = function(screenOffset) {
 		var start		= _gridPos;
 		var end		= {x: _gridPos.x + _width, y: _gridPos.y + _height};
 
-		var bounds	= {
+		var bounds = {
 			start:	start,
 			end:		end
 		};
@@ -110,19 +115,35 @@ Viewport.prototype.init = function(config) {
 		return assets;
 	}
 
-	_self.draw = function() {
-		var assets = _self.getVisibleAssets();
+	// clear each layer within viewport's screen area.
+	_self.clear = function(layers) {
+		var start = _screenPos;
+		var end	= {x: _screenPos.x + _width, y: _screenPos.y + _height};
+
+		for(var i in layers) {
+			var layer = layers[i];
+
+			layer.clearArea(start, end);
+		}
+	}
+
+	_self.draw = function(layers) {
+		_self.clear(layers);
+
+		var assets		= _self.getVisibleAssets();
+		var vportBounds	= _self.getBounds();
+		var vportOffset	= {x: _screenPos.x, y: _screenPos.y};
 
 		for(var i in assets) {
 			var asset = assets[i];
 
+			// Check asset and viewport boundaries to determine if we need to create slicing ranges for the sprite
 			var assetBounds = asset.getBounds();
-			var vportBounds = _self.getBounds();
 
 			var slice1 = {x: 0, y: 0};
 			var slice2 = {x: 0, y: 0};
 
-			// Slice 1
+			// Slice 1: asset falls west or north of the viewport
 			if( assetBounds.start.x < vportBounds.start.x ) {
 				slice1.x = vportBounds.start.x - assetBounds.start.x;
 			}
@@ -130,7 +151,9 @@ Viewport.prototype.init = function(config) {
 				slice1.y = vportBounds.start.y - assetBounds.start.y;
 			}
 
-			// Slice 2
+			// Slice 2: asset falls south or east of the viewport
+			console.log(assetBounds.end);
+			console.log(vportBounds.end);
 			if( assetBounds.end.x > vportBounds.end.x ) {
 				slice2.x = assetBounds.end.x - vportBounds.end.x;
 			}
@@ -138,7 +161,7 @@ Viewport.prototype.init = function(config) {
 				slice2.y = assetBounds.end.y - vportBounds.end.y;
 			}
 
-			asset.getLayer().drawAsset(asset, _screenPos, slice1, slice2);
+			asset.getLayer().drawAsset(asset, vportOffset, slice1, slice2);
 		}
 	}
 }
