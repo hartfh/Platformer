@@ -46,7 +46,7 @@ var PlatformerApp = function(config) {
 		handle:		'z-test-asset-4',
 		grid:		mainGrid,
 		layer:		testLayer,
-		position:		{x: 67, y: 40},
+		position:		{x: 55, y: 40},
 		sprite:		'multi1'
 	});
 	var vport = _viewportGenerator.addComponent({
@@ -54,7 +54,7 @@ var PlatformerApp = function(config) {
 		height:		110,
 		width:		110,
 		grid:		mainGrid,
-		gridPos:		{x: 1, y: 1},
+		gridPos:		{x: 50, y: 1},
 		screenPos:	{x: 1, y: 1}
 	});
 
@@ -76,6 +76,6 @@ var PlatformerApp = function(config) {
 			vport.shift('e');
 			//testAsset2.shift('s');
 			_self.draw();
-		}, 10);
+		}, 100);
 	}
 };

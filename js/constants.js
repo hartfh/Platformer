@@ -70,15 +70,4 @@ const SPRITE_KEY = {
 
 const ASSETS_PATH = 'assets/';
 
-/*
-const SPRITE_KEY = {
-	'background':		'test-sprite-2.png',
-	'error':			'test-sprite-3.png',
-	'multi-1':		'multisprite-1.png',
-	'multi-2':		'multisprite-2.png',
-	'multi-3':		'multisprite-3.png',
-	'player':			'test-sprite-1.png'
-};
-*/
-
 const APP_CONTAINER_ID = 'platformer-app-container';

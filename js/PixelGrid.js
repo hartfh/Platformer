@@ -65,6 +65,26 @@ PixelGrid.prototype.init = function(config) {
 		var start		= sequenced.start;
 		var end		= sequenced.end;
 
+		start.x -= _REGION_SIZE;
+		start.y -= _REGION_SIZE;
+
+		if( start.x < 1 ) {
+			start.x = 1;
+		}
+		if( start.y < 1 ) {
+			start.y = 1;
+		}
+
+		end.x += _REGION_SIZE;
+		end.y += _REGION_SIZE;
+
+		if( end.x > _width ) {
+			end.x == _width;
+		}
+		if( end.y > _height ) {
+			end.y == _height;
+		}
+
 		for(var x = start.x; x <= end.x; x += _REGION_SIZE) {
 			for(var y = start.y; y <= end.y; y += _REGION_SIZE) {
 				regions.push( _self.getRegion(x, y) );

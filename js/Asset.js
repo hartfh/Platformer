@@ -11,14 +11,6 @@ Asset.prototype.init = function(config) {
 	var _grid		= config.grid;						// Reference to the PixelGrid in which the Asset belongs
 	var _layer	= config.layer;					// Handle of the Layer on which the Asset should be drawn
 	var _sprite	= config.sprite || 'error';			// A code in the sprite lookup table
-	//var _height	= SPRITE_KEY[_sprite].height;			// Height of area to render the Asset's sprite
-	//var _width	= SPRITE_KEY[_sprite].width;			// Width of area to render the Asset's sprite
-
-	// TODO:	Add a way for an asset to be made up of multiple sprites.
-	//		Not sure how this will work with _height and _width.
-	//		Sprite keys may have to correspond to arrays of images.
-
-	//var _hitboxes	= [];							// Array of objects, each with an origin, height and width. When combined they define an Asset's "hitbox". Points relative to asset's own grid position
 
 	// other properties? solidity, affected by gravity (mass)
 	// descriptor properties (name, description)

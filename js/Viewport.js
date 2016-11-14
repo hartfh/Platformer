@@ -95,7 +95,11 @@ Viewport.prototype.init = function(config) {
 		}
 	}
 
-	// get all assets within regions, and each asset within that region
+	/**
+	 * Get all assets within regions in and around this viewport.
+	 *
+	 * @return	{array}		Array of Assets
+	 */
 	_self.getVisibleAssets = function() {
 		var start		= _gridPos;
 		var end		= {x: _gridPos.x + _width - 1, y: _gridPos.y + _height - 1};
@@ -139,6 +143,7 @@ Viewport.prototype.init = function(config) {
 			// Check asset and viewport boundaries to determine if we need to create slicing ranges for the sprite
 			var assetBounds = asset.getBounds();
 
+			// How much to shave off each sprite if it falls partially outside the viewport
 			var slice1 = {x: 0, y: 0};
 			var slice2 = {x: 0, y: 0};
 

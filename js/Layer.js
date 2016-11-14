@@ -27,6 +27,8 @@ Layer.prototype.init = function(config) {
 
 	_self.clearArea = function(start, end) {
 		_ctx.clearRect(start.x - 1, start.y - 1, end.x - 1, end.y - 1);
+		_ctx.fillStyle = 'orange';
+		_ctx.fillRect(0, 0, 200, 200);
 	}
 
 	/**
@@ -56,20 +58,19 @@ Layer.prototype.init = function(config) {
 			var sprite	= assetSprites[i];
 			var img		= new Image();
 
+			img.src = ASSETS_PATH + sprite.image;
+
+			// If sprite is entirely outside the viewport, don't bother trying to render it
 			if( slice1.x > sprite.origin.x + sprite.width ) {
-				console.log('stop1')
 				continue;
 			}
 			if( slice1.y > sprite.origin.y + sprite.height ) {
-				console.log('stop2')
 				continue;
 			}
 			if( slice2.x > assetDims.width - sprite.origin.x ) {
-				console.log('stop3')
 				continue;
 			}
 			if( slice2.y > assetDims.height - sprite.origin.y ) {
-				console.log('stop4')
 				continue;
 			}
 
@@ -97,72 +98,28 @@ Layer.prototype.init = function(config) {
 
 			var offset2 = {x: sprite.width, y: sprite.height};
 
-			/*
-			if( sprite.origin.x + sprite.width > assetDims.width - slice2.x ) {
-				offset2.x -= slice2.x;
-			}
-			if( sprite.origin.y + sprite.height > assetDims.height - slice2.y ) {
-				offset2.y -= slice2.y;
-			}
-			*/
-			/*
-			if( offset2.x < 0 ) {
-				offset2.x = 0;
-			}
-			if( offset2.y < 0 ) {
-				offset2.y = 0;
-			}
-			*/
-
-			var realSlice2 = {
+			var adjSlice2 = {
 				x: slice2.x - (assetDims.width - sprite.origin.x - sprite.width),
 				y: slice2.y - (assetDims.height - sprite.origin.y - sprite.height)
 			};
 
-			offset2.x -= realSlice2.x;
-			offset2.y -= realSlice2.y;
+			offset2.x -= adjSlice2.x;
+			offset2.y -= adjSlice2.y;
 
-			img.src = ASSETS_PATH + sprite.image;
+			// Determine area to clear
+			var clearX = sprite.width - slice1.x - slice2.x;
+			var clearY = sprite.height - slice1.y - slice2.y;
 
-			// TODO: clear area possibly incorrect
-			_ctx.clearRect(renderOrigin.x, renderOrigin.y, sprite.width - slice2.x, sprite.height - slice2.y);
+			if( clearX < 0 ) {
+				clearX = 0;
+			}
+			if( clearY < 0 ) {
+				clearY = 0;
+			}
+
+			_ctx.clearRect(renderOrigin.x, renderOrigin.y, clearX, clearY);
 			_ctx.drawImage(img, offset1.x, offset1.y, offset2.x, offset2.y, renderOrigin.x, renderOrigin.y, offset2.x, offset2.y);
 		}
-
-		/*
-		// OLD
-		var assetDims		= asset.getDimensions();
-		var assetOrigin	= asset.getPosition();
-
-		var spriteDiffX = assetDims.width - slice2.x;
-		var spriteDiffY = assetDims.height - slice2.y;
-
-		// Exit if the sprite would be fully outside the viewport
-		if( spriteDiffX <= 0 && spriteDiffY <= 0 ) {
-			return;
-		}
-		if( slice1.x >= 32 && slice1.y >= 32 ) {
-			return;
-		}
-
-		var renderOrigin = {x: assetOrigin.x + screenOffset.x - gridOffset.x - 1, y: assetOrigin.y + screenOffset.y - gridOffset.y - 1};
-
-		// Correct for any negative render origin coordinates
-		if( renderOrigin.x < 0 ) {
-			renderOrigin.x = 0;
-		}
-		if( renderOrigin.y < 0 ) {
-			renderOrigin.y = 0;
-		}
-
-		var spriteSrc		= asset.getSprite();
-		var img			= new Image();
-
-		img.src = spriteSrc;
-
-		_ctx.clearRect(renderOrigin.x, renderOrigin.y, spriteDiffX, spriteDiffY);
-		_ctx.drawImage(img, slice1.x, slice1.y, spriteDiffX, spriteDiffY, renderOrigin.x, renderOrigin.y, spriteDiffX, spriteDiffY);
-		*/
 	}
 
 	_self.destroy = function() {
