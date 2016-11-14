@@ -1,20 +1,40 @@
 const DIRECTIONS = {
+	'o':		{
+		x:	0,
+		y:	0
+	},
 	'n':		{
 		x:	0,
+		y:	-1
+	},
+	'ne':	{
+		x:	1,
 		y:	-1
 	},
 	'e':		{
 		x:	1,
 		y:	0
 	},
+	'se':	{
+		x:	1,
+		y:	1
+	},
 	's':		{
 		x:	0,
+		y:	1
+	},
+	'sw':	{
+		x:	-1,
 		y:	1
 	},
 	'w':		{
 		x:	-1,
 		y:	0
 	},
+	'nw':	{
+		x:	-1,
+		y:	-1
+	}
 };
 
 const SPRITE_KEY = {
@@ -67,6 +87,8 @@ const SPRITE_KEY = {
 		]
 	}
 }
+
+const TICK_TIME = 100; // milliseconds
 
 const ASSETS_PATH = 'assets/';
 

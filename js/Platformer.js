@@ -9,7 +9,7 @@ var PlatformerApp = function(config) {
 	var _pxGridGenerator	= new ComponentGenerator(PixelGrid);
 	var _assetGenerator		= new ComponentGenerator(Asset);
 
-	// Consider having Layer, Viewport and Grid (and Asset?) all extend a basic Component class
+	// Consider having Layer, Viewport and Grid (and Asset?) all extend a basic Component class.
 
 	var mainGrid = _pxGridGenerator.addComponent({
 		handle:		'test-grid',
@@ -18,8 +18,8 @@ var PlatformerApp = function(config) {
 	});
 	var testLayer = _layerGenerator.addComponent({
 		handle:		'test-layer',
-		height:		900,
-		width:		1200
+		height:		600,
+		width:		900
 	});
 	var testAsset = _assetGenerator.addComponent({
 		handle:		'test-asset',
@@ -47,7 +47,8 @@ var PlatformerApp = function(config) {
 		grid:		mainGrid,
 		layer:		testLayer,
 		position:		{x: 55, y: 40},
-		sprite:		'multi1'
+		sprite:		'multi1',
+		vector:		{direction: 'o', speed: 0}
 	});
 	var vport = _viewportGenerator.addComponent({
 		handle:		'test-vport',
@@ -59,7 +60,7 @@ var PlatformerApp = function(config) {
 	});
 
 	_self.draw = function() {
-		// TODO: determine which viewports need to be redrawn. or have them specified in arguments
+		// TODO: determine which viewports need to be redrawn? Or have them specified in arguments
 		var layers = _layerGenerator.getComponents();
 
 		_viewportGenerator.eachComponent(function(viewport, handle) {
@@ -67,15 +68,25 @@ var PlatformerApp = function(config) {
 		});
 	}
 
+	_self.tick = function() {
+		// do everything that fits into one game tick
+	}
+
+	_self.pause = function() {
+		// clear setInterval
+	}
+
+	_self.resume = function() {
+		// setup setInterval
+	}
+
 	_self.draw();
 
-	var testRun = 0;
-
-	if( testRun ) {
+	if( 0 ) {
 		setInterval(function() {
-			vport.shift('e');
-			//testAsset2.shift('s');
+			//vport.shift('e');
+			//testAsset4.shift();
 			_self.draw();
-		}, 100);
+		}, 90);
 	}
 };

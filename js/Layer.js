@@ -27,8 +27,6 @@ Layer.prototype.init = function(config) {
 
 	_self.clearArea = function(start, end) {
 		_ctx.clearRect(start.x - 1, start.y - 1, end.x - 1, end.y - 1);
-		_ctx.fillStyle = 'orange';
-		_ctx.fillRect(0, 0, 200, 200);
 	}
 
 	/**

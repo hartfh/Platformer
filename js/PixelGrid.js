@@ -75,8 +75,8 @@ PixelGrid.prototype.init = function(config) {
 			start.y = 1;
 		}
 
-		end.x += _REGION_SIZE;
-		end.y += _REGION_SIZE;
+		end.x += _REGION_SIZE - 1;
+		end.y += _REGION_SIZE - 1;
 
 		if( end.x > _width ) {
 			end.x == _width;
