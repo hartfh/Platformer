@@ -26,8 +26,6 @@ var PlatformerApp = function(config) {
 		grid:		mainGrid,
 		layer:		testLayer,
 		position:		{x: 98, y: 88},
-		height:		32,
-		width:		32,
 		sprite:		'player'
 	});
 	var testAsset2 = _assetGenerator.addComponent({
@@ -35,27 +33,21 @@ var PlatformerApp = function(config) {
 		grid:		mainGrid,
 		layer:		testLayer,
 		position:		{x: 1, y: 1},
-		height:		32,
-		width:		32,
 		sprite:		'player'
 	});
-	/*
 	var testAsset3 = _assetGenerator.addComponent({
 		handle:		'test-asset-3',
 		grid:		mainGrid,
 		layer:		testLayer,
-		position:		{x: 100, y: 50},
-		height:		32,
-		width:		32,
-		sprite:		'error'
+		position:		{x: 34, y: 1},
+		sprite:		'player'
 	});
-	*/
 	var vport = _viewportGenerator.addComponent({
 		handle:		'test-vport',
-		height:		100,
-		width:		100,
+		height:		110,
+		width:		110,
 		grid:		mainGrid,
-		gridPos:		{x: 8, y: 1},
+		gridPos:		{x: 1, y: 1},
 		screenPos:	{x: 1, y: 1}
 	});
 
@@ -70,13 +62,13 @@ var PlatformerApp = function(config) {
 
 	_self.draw();
 
-	var testRun = false;
+	var testRun = 0;
 
 	if( testRun ) {
 		setInterval(function() {
-			vport.shift('s');
+			vport.shift('e');
 			//testAsset2.shift('s');
 			_self.draw();
-		}, 100);
+		}, 10);
 	}
 };

@@ -132,7 +132,6 @@ Viewport.prototype.init = function(config) {
 
 		var assets		= _self.getVisibleAssets();
 		var vportBounds	= _self.getBounds();
-		var vportOffset	= {x: _screenPos.x, y: _screenPos.y};
 
 		for(var i in assets) {
 			var asset = assets[i];
@@ -152,8 +151,6 @@ Viewport.prototype.init = function(config) {
 			}
 
 			// Slice 2: asset falls south or east of the viewport
-			console.log(assetBounds.end);
-			console.log(vportBounds.end);
 			if( assetBounds.end.x > vportBounds.end.x ) {
 				slice2.x = assetBounds.end.x - vportBounds.end.x;
 			}
@@ -161,7 +158,7 @@ Viewport.prototype.init = function(config) {
 				slice2.y = assetBounds.end.y - vportBounds.end.y;
 			}
 
-			asset.getLayer().drawAsset(asset, vportOffset, slice1, slice2);
+			asset.getLayer().drawAsset(asset, _screenPos, _gridPos, slice1, slice2);
 		}
 	}
 }
