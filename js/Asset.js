@@ -7,11 +7,12 @@ var Asset = function(config) {
 Asset.prototype.init = function(config) {
 	var _self		= this;
 	var _handle	= config.handle || '';
-	var _gridPos	= config.position || {x: 0, y: 0};		// PixelGrid coordinates
-	var _grid		= config.grid;						// Reference to the PixelGrid in which the Asset belongs
-	var _layer	= config.layer;					// Handle of the Layer on which the Asset should be drawn
-	var _sprite	= config.sprite || 'error';			// A code in the sprite lookup table
-	var _vector	= config.vector || {direction: 'o', speed: 0};
+	var _gridPos	= config.position || {x: 0, y: 0};				// PixelGrid coordinates (can be floats)
+	var _grid		= config.grid;								// Reference to the PixelGrid in which the Asset belongs
+	var _layer	= config.layer;							// Handle of the Layer on which the Asset should be drawn
+	var _sprite	= config.sprite || 'error';					// A code in the sprite lookup table
+	var _velocity	= config.velocity || {direction: 0, speed: 0};
+
 	// Vector: contains a point, relative to the asset, that determines directionality. Also contains a speed magnitude.
 	// Unclear how speed works with game "ticks." Maybe speed is ticks to move one tile. Slow things travel 1 tile / 5 ticks. Faster means 1 tile / tick.
 	// Or speed could simply be 0.2, 0.5, 1.0, etc. and position data would have to track/round decimals.
@@ -26,28 +27,56 @@ Asset.prototype.init = function(config) {
 		_grid.removeAssetFromRegion(_self);
 	}
 
-	_self.getVector = function() {
+	_self.getVelocity = function() {
 		return {
-			direction:	_vector.direction,
-			speed:		_vector.speed
-		}
-	}
-
-	_self.setDirection = function(direction) {
-		if( typeof(direction) != 'string' ) {
-			throw new Error('Vector direction argument must be a string.');
-		}
-		if( DIRECTIONS.hasOwnProperty(direction) ) {
-			_vector.direction = direction;
-		}
+			direction:	_velocity.direction,
+			speed:		_velocity.speed
+		};
 	}
 
 	_self.setSpeed = function(speed = 0) {
 		if( typeof(speed) != 'number' ) {
-			throw new Error('Vector speed argument must be a number');
+			throw new Error('Velocity speed component must be a number.');
 		}
 
-		_vector.speed = speed;
+		_velocity.speed = speed;
+
+		return _self;
+	}
+
+	_self.setDirection = function(angle = 0) {
+		if( typeof(angle) != 'number' ) {
+			throw new Error('Velocity direction component must be a number.');
+		}
+
+		_velocity.direction = angle;
+
+		return _self;
+	}
+
+	_self.getVelocityShift = function() {
+
+	}
+
+	// Shift asset according to its velocity
+	_self.move = function() {
+		var radians	= Math.PI * _velocity.direction / 180;
+		var xPortion	= Math.cos(radians) * 1;
+		var yPortion	= Math.sin(radians) * 1;
+		var speed		= _self.getVelocity().speed;
+
+		// Find x- and y-components of velocity and adjust grid position by those amounts
+		var xMagnitude = speed * xPortion;
+		var yMagnitude = speed * yPortion;
+
+		_gridPos.x += xMagnitude;
+		_gridPos.y += yMagnitude;
+
+		// Track grid position to three decimal places
+		_gridPos.x = Math.round(_gridPos.x * 1000) / 1000;
+		_gridPos.y = Math.round(_gridPos.y * 1000) / 1000;
+
+		return _gridPos;
 	}
 
 	/**
@@ -55,10 +84,7 @@ Asset.prototype.init = function(config) {
 	 *
 	 * @param		{string}	direction
 	 */
-	_self.shift = function(direction) {
-		if( typeof(direction) != 'string' ) {
-			var direction = _self.getVector().direction;
-		}
+	_self.shift = function(direction = 'o') {
 		if( DIRECTIONS.hasOwnProperty(direction) ) {
 			var adjust	= DIRECTIONS[direction];
 			var pxDims	= _grid.getDimensions();
@@ -82,10 +108,21 @@ Asset.prototype.init = function(config) {
 		}
 
 		_grid.checkRegion(_self);
+
+		return _self;
 	}
 
-	_self.getPosition = function() {
-		return _gridPos;
+	_self.getPosition = function(round = false) {
+		var gridPosition = {x: _gridPos.x, y: _gridPos.y};
+
+		if( round ) {
+			gridPosition = {
+				x:	Math.round( _gridPos.x ),
+				y:	Math.round( _gridPos.y ),
+			};
+		}
+
+		return gridPosition;
 	}
 
 	_self.getHandle = function() {
@@ -120,8 +157,8 @@ Asset.prototype.init = function(config) {
 	 *
 	 * @return	{object}
 	 */
-	_self.getBounds = function() {
-		var start		= _gridPos;
+	_self.getBounds = function(round = false) {
+		var start		= _self.getPosition(round);
 		var end		= {x: _gridPos.x + SPRITE_KEY[_sprite].width, y: _gridPos.y + SPRITE_KEY[_sprite].height};
 
 		var bounds	= {

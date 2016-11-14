@@ -141,7 +141,7 @@ Viewport.prototype.init = function(config) {
 			var asset = assets[i];
 
 			// Check asset and viewport boundaries to determine if we need to create slicing ranges for the sprite
-			var assetBounds = asset.getBounds();
+			var assetBounds = asset.getBounds(true);
 
 			// How much to shave off each sprite if it falls partially outside the viewport
 			var slice1 = {x: 0, y: 0};

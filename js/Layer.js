@@ -49,7 +49,7 @@ Layer.prototype.init = function(config) {
 		}
 
 		var assetDims		= asset.getDimensions();
-		var assetOrigin	= asset.getPosition();
+		var assetOrigin	= asset.getPosition(true);
 		var assetSprites	= asset.getSprites();
 
 		for(var i in assetSprites) {
