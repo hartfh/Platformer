@@ -48,7 +48,6 @@ Layer.prototype.init = function(config) {
 			throw new Error('Slicing range 2 argument missing or not an object when drawing asset.');
 		}
 
-		// NEW
 		var assetDims		= asset.getDimensions();
 		var assetOrigin	= asset.getPosition();
 		var assetSprites	= asset.getSprites();
@@ -58,16 +57,20 @@ Layer.prototype.init = function(config) {
 			var img		= new Image();
 
 			if( slice1.x > sprite.origin.x + sprite.width ) {
-				return;
+				console.log('stop1')
+				continue;
 			}
 			if( slice1.y > sprite.origin.y + sprite.height ) {
-				return;
+				console.log('stop2')
+				continue;
 			}
 			if( slice2.x > assetDims.width - sprite.origin.x ) {
-				return;
+				console.log('stop3')
+				continue;
 			}
 			if( slice2.y > assetDims.height - sprite.origin.y ) {
-				return;
+				console.log('stop4')
+				continue;
 			}
 
 			var renderOrigin = {
@@ -83,8 +86,6 @@ Layer.prototype.init = function(config) {
 				renderOrigin.y = 0;
 			}
 
-			img.src = ASSETS_PATH + sprite.image;
-
 			var offset1 = {x: slice1.x - sprite.origin.x, y: slice1.y - sprite.origin.y};
 
 			if( offset1.x < 0 ) {
@@ -94,8 +95,26 @@ Layer.prototype.init = function(config) {
 				offset1.y = 0;
 			}
 
+			var offset2 = {x: sprite.width, y: sprite.height};
+
+			if( sprite.origin.x + sprite.width > assetDims.width - slice2.x ) {
+				offset2.x -= slice2.x;
+			}
+			if( sprite.origin.y + sprite.height > assetDims.height - slice2.y ) {
+				offset2.y -= slice2.y;
+			}
+			if( offset2.x < 0 ) {
+				offset2.x = 0;
+			}
+			if( offset2.y < 0 ) {
+				offset2.y = 0;
+			}
+
+			img.src = ASSETS_PATH + sprite.image;
+
+			// TODO: clear area possibly incorrect
 			_ctx.clearRect(renderOrigin.x, renderOrigin.y, sprite.width - slice2.x, sprite.height - slice2.y);
-			_ctx.drawImage(img, offset1.x, offset1.y, sprite.width - offset1.x, sprite.height - offset1.y, renderOrigin.x, renderOrigin.y, sprite.width - slice2.x, sprite.height - slice2.y);
+			_ctx.drawImage(img, offset1.x, offset1.y, offset2.x, offset2.y, renderOrigin.x, renderOrigin.y, offset2.x, offset2.y);
 		}
 
 		/*

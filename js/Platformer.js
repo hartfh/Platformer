@@ -42,6 +42,13 @@ var PlatformerApp = function(config) {
 		position:		{x: 34, y: 1},
 		sprite:		'player'
 	});
+	var testAsset4 = _assetGenerator.addComponent({
+		handle:		'z-test-asset-4',
+		grid:		mainGrid,
+		layer:		testLayer,
+		position:		{x: 81, y: 49},
+		sprite:		'multi1'
+	});
 	var vport = _viewportGenerator.addComponent({
 		handle:		'test-vport',
 		height:		110,
