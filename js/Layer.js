@@ -97,18 +97,30 @@ Layer.prototype.init = function(config) {
 
 			var offset2 = {x: sprite.width, y: sprite.height};
 
+			/*
 			if( sprite.origin.x + sprite.width > assetDims.width - slice2.x ) {
 				offset2.x -= slice2.x;
 			}
 			if( sprite.origin.y + sprite.height > assetDims.height - slice2.y ) {
 				offset2.y -= slice2.y;
 			}
+			*/
+			/*
 			if( offset2.x < 0 ) {
 				offset2.x = 0;
 			}
 			if( offset2.y < 0 ) {
 				offset2.y = 0;
 			}
+			*/
+
+			var realSlice2 = {
+				x: slice2.x - (assetDims.width - sprite.origin.x - sprite.width),
+				y: slice2.y - (assetDims.height - sprite.origin.y - sprite.height)
+			};
+
+			offset2.x -= realSlice2.x;
+			offset2.y -= realSlice2.y;
 
 			img.src = ASSETS_PATH + sprite.image;
 
