@@ -5,17 +5,14 @@ var Asset = function(config) {
 };
 
 Asset.prototype.init = function(config) {
-	var _self		= this;
-	var _handle	= config.handle || '';
-	var _gridPos	= config.position || {x: 0, y: 0};				// PixelGrid coordinates (can be floats)
-	var _grid		= config.grid;								// Reference to the PixelGrid in which the Asset belongs
-	var _layer	= config.layer;							// Handle of the Layer on which the Asset should be drawn
-	var _sprite	= config.sprite || 'error';					// A code in the sprite lookup table
-	var _velocity	= config.velocity || {direction: 0, speed: 0};
-
-	// Vector: contains a point, relative to the asset, that determines directionality. Also contains a speed magnitude.
-	// Unclear how speed works with game "ticks." Maybe speed is ticks to move one tile. Slow things travel 1 tile / 5 ticks. Faster means 1 tile / tick.
-	// Or speed could simply be 0.2, 0.5, 1.0, etc. and position data would have to track/round decimals.
+	var _self			= this;
+	var _handle		= config.handle || '';
+	var _gridPos		= config.position || {x: 0, y: 0};				// PixelGrid coordinates (can be floats)
+	var _grid			= config.grid;								// Reference to the PixelGrid in which the Asset belongs
+	var _layer		= config.layer;							// Handle of the Layer on which the Asset should be drawn
+	var _sprite		= config.sprite || 'error';					// A code in the sprite lookup table
+	var _velocity		= (config.velocity) ? new Vector(config.velocity.magnitude, config.velocity.direction) : new Vector(0, 0);
+	var _acceleration	= (config.acceleration) ? new Vector(config.acceleration.magnitude, config.acceleration.direction) : new Vector(0, 0);
 
 	// other properties? solidity, affected by gravity (mass)
 	// descriptor properties (name, description)
@@ -35,48 +32,45 @@ Asset.prototype.init = function(config) {
 	}
 
 	_self.setSpeed = function(speed = 0) {
-		if( typeof(speed) != 'number' ) {
-			throw new Error('Velocity speed component must be a number.');
-		}
-
-		_velocity.speed = speed;
+		_velocity.setMagnitude(speed);
 
 		return _self;
 	}
 
 	_self.setDirection = function(angle = 0) {
-		if( typeof(angle) != 'number' ) {
-			throw new Error('Velocity direction component must be a number.');
-		}
-
-		_velocity.direction = angle;
+		_velocity.setDirection(angle);
 
 		return _self;
 	}
 
-	_self.getVelocityShift = function() {
-
-	}
-
 	// Shift asset according to its velocity
 	_self.move = function() {
-		var radians	= Math.PI * _velocity.direction / 180;
-		var xPortion	= Math.cos(radians) * 1;
-		var yPortion	= Math.sin(radians) * 1;
-		var speed		= _self.getVelocity().speed;
-
-		// Find x- and y-components of velocity and adjust grid position by those amounts
-		var xMagnitude = speed * xPortion;
-		var yMagnitude = speed * yPortion;
-
-		_gridPos.x += xMagnitude;
-		_gridPos.y += yMagnitude;
+		// Adjust grid position by velocity x- and y-components
+		_gridPos.x += _velocity.getX();
+		_gridPos.y += _velocity.getY();
 
 		// Track grid position to three decimal places
 		_gridPos.x = Math.round(_gridPos.x * 1000) / 1000;
 		_gridPos.y = Math.round(_gridPos.y * 1000) / 1000;
 
 		return _gridPos;
+	}
+
+	_self.accelerate = function() {
+		var accelX = _acceleration.getX();
+		var accelY = _acceleration.getY();
+
+		var velX = _velocity.getX();
+		var velY = _velocity.getY();
+
+		var combinedX = accelX + velX;
+		var combinedY = accelY + velY;
+
+		var newAngle = radiansToDegrees( Math.atan(combinedY / combinedX) );
+		var newMagnitude = Math.sqrt( Math.pow(combinedX, 2) + Math.pow(combinedY, 2) );
+
+		_self.setDirection(newAngle);
+		_self.setSpeed(newMagnitude);
 	}
 
 	/**

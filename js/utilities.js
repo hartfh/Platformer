@@ -39,6 +39,13 @@ function sequencePoints(first, second) {
 	}
 }
 
+function degreesToRadians(degrees) {
+	return Math.PI * degrees / 180;
+}
+function radiansToDegrees(radians) {
+	return radians * 180 / Math.PI;
+}
+
 /**
  * Translates a sprite code into a path to an image file.
  *

@@ -48,7 +48,8 @@ var PlatformerApp = function(config) {
 		layer:		testLayer,
 		position:		{x: 55, y: 40},
 		sprite:		'multi1',
-		velocity:		{speed: 1.3, direction: 0}
+		velocity:		{magnitude: 0, direction: 0},
+		acceleration:	{magnitude: 0.1, direction: 0}
 	});
 	var vport = _viewportGenerator.addComponent({
 		handle:		'test-vport',
@@ -83,16 +84,17 @@ var PlatformerApp = function(config) {
 	_self.draw();
 
 	var dir = 0;
-	testAsset4.setDirection(dir).setSpeed(0.15);
+	testAsset4.setDirection(dir);
 
 	if( 0 ) {
 		setInterval(function() {
 			//vport.shift('e');
-			testAsset4.setDirection(dir);
+			//testAsset4.setDirection(dir);
 			testAsset4.move();
+			testAsset4.accelerate();
 
 			dir += 1;
 			_self.draw();
-		}, 5);
+		}, 1);
 	}
 };
