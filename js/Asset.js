@@ -16,7 +16,7 @@ Asset.prototype.init = function(config) {
 
 	//var _solid = true/false;
 	//var _mass;
-	//var _elasticity = 0-1;		// How much the asset bounces (1 is 100% bounce. 0 is no bounce)
+	//var _elasticity = 0-1;		// How much other assets bounce off it (1 is 100% bounce. 0 is no bounce)
 
 	// other properties? solidity, affected by gravity (mass)
 	// descriptor properties (name, description)
@@ -49,14 +49,19 @@ Asset.prototype.init = function(config) {
 
 	// Shift asset according to its velocity
 	_self.move = function() {
-		if( _self.isObstructed() ) {
+		// Determine disances to traverse
+		var distX = _velocity.getX();
+		var distY = _velocity.getY();
+
+		if( _self.isObstructed(distX, distY) ) {
 			// TODO: apply elasticity changes (reversing velocity/acceleration). Needs to ricochet properly
+			_self.ricochet(distX, distY);
 			return;
 		}
 
 		// Adjust grid position by velocity x- and y-components
-		_gridPos.x += _velocity.getX();
-		_gridPos.y += _velocity.getY();
+		_gridPos.x += distX;
+		_gridPos.y += distY;
 
 		// Track grid position to three decimal places
 		_gridPos.x = Math.round(_gridPos.x * 1000) / 1000;
@@ -87,8 +92,16 @@ Asset.prototype.init = function(config) {
 		_velocity.combineWith(_acceleration);
 	}
 
-	_self.isObstructed = function() {
-		// TODO: check assets for solidity
+	_self.ricochet = function(distX, distY) {
+		//console.log( _velocity.getX() );
+		//console.log( _velocity.getY() );
+
+		// Still need to determine the direction of obstruction.
+		// If distX is non-zero, reverse X velocity. Same for Y. Then convert velocity back into vector form (magnitude, direction)
+	}
+
+	_self.isObstructed = function(distX, distY) {
+		// TODO: check this or other assets for solidity
 		// if this asset isn't solid, can just return false right away.
 		// other non-solid assets can be skipped over
 
@@ -104,7 +117,7 @@ Asset.prototype.init = function(config) {
 				var asset = region[handle];
 
 				if( handle != _handle ) {
-					var ownHitboxes	= _self.getHitboxes();
+					var ownHitboxes	= _self.getHitboxes(distX, distY);
 					var hitboxes		= asset.getHitboxes();
 
 					// Compare this asset's hitboxes and those of the nearby assets
@@ -115,6 +128,12 @@ Asset.prototype.init = function(config) {
 							var hitbox = hitboxes[b];
 
 							if( boxesOverlap(hitbox, ownHitbox) ) {
+								// TODO:
+								// If a collision will happen, get two new asset hitboxes.
+								// Compare each of those with boxesOverlapX/Y() to see which direction
+								// of travel will cause the conflict. Then return either x: true, y: true, or both
+								// to signal how ricochet should act upon the asset's velocity.
+
 								return true;
 							}
 						}
@@ -133,13 +152,13 @@ Asset.prototype.init = function(config) {
 	 */
 	_self.shift = function(direction = 'o') {
 		if( DIRECTIONS.hasOwnProperty(direction) ) {
-
-			if( _self.isObstructed() ) {
-				return;
-			}
-
 			var adjust	= DIRECTIONS[direction];
 			var pxDims	= _grid.getDimensions();
+
+			if( _self.isObstructed(adjust.x, adjust.y) ) {
+				_self.ricochet(adjust.x, adjust.y);
+				return;
+			}
 
 			_gridPos.x += adjust.x;
 			_gridPos.y += adjust.y;
@@ -185,15 +204,48 @@ Asset.prototype.init = function(config) {
 		return _layer;
 	}
 
-	_self.getHitboxes = function() {
+	/**
+	 *
+	 *
+	 * @param		{float}	distX		Amount asset will be traveling in x-direction
+	 * @param		{float}	distY		Amount asset will be traveling in y-direction
+	 * @return	{array}				Array of objects containing start and end point objects
+	 */
+	_self.getHitboxes = function(distX, distY) {
+		// Get asset's hitboxes and setup array for modified hitboxes
 		var hitboxes		= SPRITE_KEY[_sprite].hitboxes;
 		var offsetHitboxes	= [];
 
+		// Determine the direction of travel and increase the hitboxes' dimensions in that direction
+		var startMod	= {x: 0, y: 0};
+		var endMod	= {x: 0, y: 0};
+
+		if( distX < 0 ) {
+			startMod.x = distX;
+		}
+		if( distY < 0 ) {
+			startMod.y = distY;
+		}
+		if( distX > 0 ) {
+			endMod.x = distX;
+		}
+		if( distY > 0 ) {
+			endMod.y = distY;
+		}
+
+		// Offset each hitbox based on asset's grid position, as well as apply modifications based on travel direction
 		for(var i in hitboxes) {
 			var hitbox = hitboxes[i];
+
 			var offsetHitbox = {
-				start:	{x: hitbox.start.x + _gridPos.x, y: hitbox.start.y + _gridPos.y},
-				end:		{x: hitbox.end.x + _gridPos.x, y: hitbox.end.y + _gridPos.y},
+				start:	{
+					x:	hitbox.start.x + _gridPos.x + startMod.x,
+					y:	hitbox.start.y + _gridPos.y + startMod.y
+				},
+				end:		{
+					x:	hitbox.end.x + _gridPos.x - 1 + endMod.x,
+					y:	hitbox.end.y + _gridPos.y - 1 + endMod.y
+				}
 			}
 
 			offsetHitboxes.push(offsetHitbox);
@@ -223,7 +275,10 @@ Asset.prototype.init = function(config) {
 	 */
 	_self.getBounds = function(round = false) {
 		var start		= _self.getPosition(round);
-		var end		= {x: _gridPos.x + SPRITE_KEY[_sprite].width, y: _gridPos.y + SPRITE_KEY[_sprite].height};
+		var end		= {
+			x:	_gridPos.x + SPRITE_KEY[_sprite].width,
+			y:	_gridPos.y + SPRITE_KEY[_sprite].height
+		};
 
 		var bounds	= {
 			start:	start,

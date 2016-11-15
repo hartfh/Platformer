@@ -43,10 +43,14 @@ Vector.prototype.init = function(magnitude, direction) {
 	}
 
 	_self.getX = function() {
-		return Math.cos(_radians) * _magnitude;
+		var xMagnitude = Math.cos(_radians) * _magnitude;
+
+		return Math.round(xMagnitude * 1000) / 1000;
 	}
 
 	_self.getY = function() {
-		return Math.sin(_radians) * _magnitude;
+		var yMagnitude = Math.sin(_radians) * _magnitude;
+
+		return Math.round(yMagnitude * 1000) / 1000;
 	}
 };

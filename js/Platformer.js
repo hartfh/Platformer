@@ -48,7 +48,7 @@ var PlatformerApp = function(config) {
 		layer:		testLayer,
 		position:		{x: 55, y: 34},
 		sprite:		'multi1',
-		velocity:		{magnitude: 0, direction: 0},
+		velocity:		{magnitude: 1, direction: 270},
 		acceleration:	{magnitude: 0.01, direction: 0}
 	});
 	var vport = _viewportGenerator.addComponent({
@@ -81,8 +81,11 @@ var PlatformerApp = function(config) {
 		// setup setInterval
 	}
 
+	testAsset4.shift('n');
+	testAsset4.shift('n');
 	//testAsset4.shift('n');
-	//testAsset4.shift('n');
+	//testAsset4.shift('s');
+	//testAsset4.shift('s');
 
 	_self.draw();
 
