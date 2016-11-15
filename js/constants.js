@@ -48,6 +48,12 @@ const SPRITE_KEY = {
 				origin:		{x: 0, y: 0},
 				image:		'test-sprite-1.png'
 			}
+		],
+		hitboxes:		[
+			{
+				start:	{x:	0,	y:	0},
+				end:		{x:	32,	y:	32}
+			}
 		]
 	},
 	'error':			{
@@ -84,6 +90,20 @@ const SPRITE_KEY = {
 				origin:		{x: 0, y: 32},
 				image:		'multisprite-3.png'
 			},
+		],
+		hitboxes:		[
+			{
+				start:	{x:	0,	y:	0},
+				end:		{x:	32,	y:	32}
+			},
+			{
+				start:	{x:	32,	y:	0},
+				end:		{x:	64,	y:	32}
+			},
+			{
+				start:	{x:	0,	y:	32},
+				end:		{x:	32,	y:	64}
+			}
 		]
 	}
 }

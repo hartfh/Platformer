@@ -37,8 +37,8 @@ Viewport.prototype.init = function(config) {
 	 * @return	{object}					Object container "start" and "end" coordinate objects
 	 */
 	_self.getBounds = function(screenOffset) {
-		var start		= _gridPos;
-		var end		= {x: _gridPos.x + _width, y: _gridPos.y + _height};
+		var start	= _gridPos;
+		var end	= {x: _gridPos.x + _width, y: _gridPos.y + _height};
 
 		var bounds = {
 			start:	start,
@@ -101,9 +101,10 @@ Viewport.prototype.init = function(config) {
 	 * @return	{array}		Array of Assets
 	 */
 	_self.getVisibleAssets = function() {
+		var buffer	= 50;
 		var start		= _gridPos;
 		var end		= {x: _gridPos.x + _width - 1, y: _gridPos.y + _height - 1};
-		var regions	= _grid.getRegionsWithin(start, end);
+		var regions	= _grid.getRegionsWithin({x: start.x - buffer, y: start.y - buffer}, {x: end.x + buffer, y: end.y + buffer});
 		var assets	= [];
 
 		for(var i in regions) {

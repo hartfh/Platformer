@@ -25,7 +25,7 @@ var PlatformerApp = function(config) {
 		handle:		'test-asset',
 		grid:		mainGrid,
 		layer:		testLayer,
-		position:		{x: 98, y: 88},
+		position:		{x: 98, y: 108},
 		sprite:		'player'
 	});
 	var testAsset2 = _assetGenerator.addComponent({
@@ -46,15 +46,15 @@ var PlatformerApp = function(config) {
 		handle:		'z-test-asset-4',
 		grid:		mainGrid,
 		layer:		testLayer,
-		position:		{x: 55, y: 40},
+		position:		{x: 55, y: 34},
 		sprite:		'multi1',
 		velocity:		{magnitude: 0, direction: 0},
-		acceleration:	{magnitude: 0.1, direction: 0}
+		acceleration:	{magnitude: 0.01, direction: 0}
 	});
 	var vport = _viewportGenerator.addComponent({
 		handle:		'test-vport',
 		height:		110,
-		width:		110,
+		width:		510,
 		grid:		mainGrid,
 		gridPos:		{x: 50, y: 1},
 		screenPos:	{x: 1, y: 1}
@@ -81,10 +81,13 @@ var PlatformerApp = function(config) {
 		// setup setInterval
 	}
 
+	//testAsset4.shift('n');
+	//testAsset4.shift('n');
+
 	_self.draw();
 
 	var dir = 0;
-	testAsset4.setDirection(dir);
+
 
 	if( 0 ) {
 		setInterval(function() {
@@ -95,6 +98,6 @@ var PlatformerApp = function(config) {
 
 			dir += 1;
 			_self.draw();
-		}, 1);
+		}, 10);
 	}
 };

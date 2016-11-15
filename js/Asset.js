@@ -14,6 +14,10 @@ Asset.prototype.init = function(config) {
 	var _velocity		= (config.velocity) ? new Vector(config.velocity.magnitude, config.velocity.direction) : new Vector(0, 0);
 	var _acceleration	= (config.acceleration) ? new Vector(config.acceleration.magnitude, config.acceleration.direction) : new Vector(0, 0);
 
+	//var _solid = true/false;
+	//var _mass;
+	//var _elasticity = 0-1;		// How much the asset bounces (1 is 100% bounce. 0 is no bounce)
+
 	// other properties? solidity, affected by gravity (mass)
 	// descriptor properties (name, description)
 
@@ -45,6 +49,11 @@ Asset.prototype.init = function(config) {
 
 	// Shift asset according to its velocity
 	_self.move = function() {
+		if( _self.isObstructed() ) {
+			// TODO: apply elasticity changes (reversing velocity/acceleration). Needs to ricochet properly
+			return;
+		}
+
 		// Adjust grid position by velocity x- and y-components
 		_gridPos.x += _velocity.getX();
 		_gridPos.y += _velocity.getY();
@@ -53,24 +62,68 @@ Asset.prototype.init = function(config) {
 		_gridPos.x = Math.round(_gridPos.x * 1000) / 1000;
 		_gridPos.y = Math.round(_gridPos.y * 1000) / 1000;
 
+		var pxDims = _grid.getDimensions();
+
+		// Ensure the asset remaims within its PixelGrid's boundaries
+		if( _gridPos.x < 1 ) {
+			_gridPos.x = 1;
+		}
+		if( _gridPos.y < 1 ) {
+			_gridPos.y = 1;
+		}
+		if( _gridPos.x >= pxDims.width ) {
+			_gridPos.x = pxDims.width - 1;
+		}
+		if( _gridPos.y >= pxDims.height ) {
+			_gridPos.y = pxDims.height - 1;
+		}
+
+		_grid.checkRegion(_self);
+
 		return _gridPos;
 	}
 
 	_self.accelerate = function() {
-		var accelX = _acceleration.getX();
-		var accelY = _acceleration.getY();
+		_velocity.combineWith(_acceleration);
+	}
 
-		var velX = _velocity.getX();
-		var velY = _velocity.getY();
+	_self.isObstructed = function() {
+		// TODO: check assets for solidity
+		// if this asset isn't solid, can just return false right away.
+		// other non-solid assets can be skipped over
 
-		var combinedX = accelX + velX;
-		var combinedY = accelY + velY;
+		// Get all assets in the region(s) this asset is in
+		var assetBounds	= _self.getBounds(true);
+		var assetRegions	= _grid.getRegionsWithin(assetBounds.start, assetBounds.end);
 
-		var newAngle = radiansToDegrees( Math.atan(combinedY / combinedX) );
-		var newMagnitude = Math.sqrt( Math.pow(combinedX, 2) + Math.pow(combinedY, 2) );
+		// Loop through each asset in nearby regions
+		for(var i in assetRegions) {
+			var region = assetRegions[i];
 
-		_self.setDirection(newAngle);
-		_self.setSpeed(newMagnitude);
+			for(var handle in region) {
+				var asset = region[handle];
+
+				if( handle != _handle ) {
+					var ownHitboxes	= _self.getHitboxes();
+					var hitboxes		= asset.getHitboxes();
+
+					// Compare this asset's hitboxes and those of the nearby assets
+					for(var a in ownHitboxes) {
+						var ownHitbox = ownHitboxes[a];
+
+						for(var b in hitboxes) {
+							var hitbox = hitboxes[b];
+
+							if( boxesOverlap(hitbox, ownHitbox) ) {
+								return true;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -80,6 +133,11 @@ Asset.prototype.init = function(config) {
 	 */
 	_self.shift = function(direction = 'o') {
 		if( DIRECTIONS.hasOwnProperty(direction) ) {
+
+			if( _self.isObstructed() ) {
+				return;
+			}
+
 			var adjust	= DIRECTIONS[direction];
 			var pxDims	= _grid.getDimensions();
 
@@ -127,9 +185,21 @@ Asset.prototype.init = function(config) {
 		return _layer;
 	}
 
-	_self.getHitbox = function() {
-		// Return one or multiple hitboxes based on sprites.
-		// These should perhaps be pre-set in sprite data, so they don't have to be calculated.
+	_self.getHitboxes = function() {
+		var hitboxes		= SPRITE_KEY[_sprite].hitboxes;
+		var offsetHitboxes	= [];
+
+		for(var i in hitboxes) {
+			var hitbox = hitboxes[i];
+			var offsetHitbox = {
+				start:	{x: hitbox.start.x + _gridPos.x, y: hitbox.start.y + _gridPos.y},
+				end:		{x: hitbox.end.x + _gridPos.x, y: hitbox.end.y + _gridPos.y},
+			}
+
+			offsetHitboxes.push(offsetHitbox);
+		}
+
+		return offsetHitboxes;
 	}
 
 	/**

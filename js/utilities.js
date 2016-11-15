@@ -42,8 +42,19 @@ function sequencePoints(first, second) {
 function degreesToRadians(degrees) {
 	return Math.PI * degrees / 180;
 }
+
 function radiansToDegrees(radians) {
 	return radians * 180 / Math.PI;
+}
+
+function boxesOverlap(box1, box2) {
+	if( box1.start.x <= box2.end.x && box1.end.x >= box2.start.x ) {
+		if( box1.start.y <= box2.end.y && box1.end.y >= box2.start.y ) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 /**

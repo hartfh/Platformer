@@ -21,10 +21,13 @@ PixelGrid.prototype.init = function(config) {
 	 * Sets up 2-dimensional array of objects.
 	 */
 	_self.createRegions = function() {
-		for(var x = 0; x < _width; x += _REGION_SIZE) {
+		var width		= Math.ceil(_width / _REGION_SIZE) * _REGION_SIZE;
+		var height	= Math.ceil(_height / _REGION_SIZE) * _REGION_SIZE;
+
+		for(var x = 0; x <= width; x += _REGION_SIZE) {
 			var column = [];
 
-			for(var y = 0; y < _height; y += _REGION_SIZE) {
+			for(var y = 0; y <= height; y += _REGION_SIZE) {
 				column.push({});
 			}
 
@@ -65,9 +68,6 @@ PixelGrid.prototype.init = function(config) {
 		var start		= sequenced.start;
 		var end		= sequenced.end;
 
-		start.x -= _REGION_SIZE;
-		start.y -= _REGION_SIZE;
-
 		if( start.x < 1 ) {
 			start.x = 1;
 		}
@@ -75,8 +75,9 @@ PixelGrid.prototype.init = function(config) {
 			start.y = 1;
 		}
 
-		end.x += _REGION_SIZE - 1;
-		end.y += _REGION_SIZE - 1;
+		// Round up to the nearest region size
+		end.x = Math.ceil(end.x / _REGION_SIZE) * _REGION_SIZE;
+		end.y = Math.ceil(end.y / _REGION_SIZE) * _REGION_SIZE;
 
 		if( end.x > _width ) {
 			end.x == _width;
