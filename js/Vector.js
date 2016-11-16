@@ -29,12 +29,12 @@ Vector.prototype.init = function(magnitude, direction) {
 		var xMagnitude = _self.getX();
 		var yMagnitude = _self.getY();
 
+		// Reverse the x-component
 		if( flipX ) {
-			console.log('flippping X');
 			xMagnitude *= (-1 * elasticity);
 		}
+		// Reverse the y-component
 		if( flipY ) {
-			console.log('flippping Y');
 			yMagnitude *= (-1 * elasticity);
 		}
 
@@ -88,5 +88,9 @@ Vector.prototype.init = function(magnitude, direction) {
 
 	_self.getDirection = function() {
 		return _direction;
+	}
+
+	_self.getMagnitude = function() {
+		return _magnitude;
 	}
 };

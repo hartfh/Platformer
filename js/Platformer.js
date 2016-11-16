@@ -26,30 +26,36 @@ var PlatformerApp = function(config) {
 		grid:		mainGrid,
 		layer:		testLayer,
 		position:		{x: 98, y: 108},
-		sprite:		'player'
+		sprite:		'player',
+		mass:		100.00
 	});
 	var testAsset2 = _assetGenerator.addComponent({
 		handle:		'test-asset-2',
 		grid:		mainGrid,
 		layer:		testLayer,
 		position:		{x: 1, y: 1},
-		sprite:		'player'
+		sprite:		'player',
+		mass:		100.00
 	});
 	var testAsset3 = _assetGenerator.addComponent({
 		handle:		'test-asset-3',
 		grid:		mainGrid,
 		layer:		testLayer,
-		position:		{x: 34, y: 1},
-		sprite:		'player'
+		position:		{x: 34, y: 9},
+		sprite:		'player',
+		velocity:		{magnitude: 1, direction: 270},
+		acceleration:	{magnitude: 0.00, direction: 0},
+		mass:		200.00
 	});
 	var testAsset4 = _assetGenerator.addComponent({
 		handle:		'z-test-asset-4',
 		grid:		mainGrid,
 		layer:		testLayer,
-		position:		{x: 50, y: 34},
+		position:		{x: 55, y: 52},
 		sprite:		'multi1',
-		velocity:		{magnitude: 1, direction: 315},
-		acceleration:	{magnitude: 0.00, direction: 0}
+		velocity:		{magnitude: 0, direction: 0},
+		acceleration:	{magnitude: 0.00, direction: 0},
+		mass:		50.00
 	});
 	var vport = _viewportGenerator.addComponent({
 		handle:		'test-vport',
@@ -82,7 +88,6 @@ var PlatformerApp = function(config) {
 	}
 
 	//testAsset4.move();
-	//testAsset4.move();
 
 	_self.draw();
 
@@ -93,11 +98,12 @@ var PlatformerApp = function(config) {
 		setInterval(function() {
 			//vport.shift('e');
 			//testAsset4.setDirection(dir);
+			testAsset3.move();
 			testAsset4.move();
 			//testAsset4.accelerate();
 
 			dir += 1;
 			_self.draw();
-		}, 20);
+		}, 50);
 	}
 };

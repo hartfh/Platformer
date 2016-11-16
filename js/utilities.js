@@ -39,6 +39,16 @@ function sequencePoints(first, second) {
 	}
 }
 
+function getElasticVelocities(m1, m2, v1, v2) {
+	var v3 = (v1 * ((m1 - m2) / (m1 + m2))) + (v2 * ((2 * m2) / (m1 + m2)));
+	var v4 = (v1 * ((2 * m1) / (m1 + m2))) + (v2 * ( (m2 - m1) / (m1 + m2)));
+
+	return {
+		v1:	v3,
+		v2:	v4
+	}
+}
+
 function degreesToRadians(degrees) {
 	return Math.PI * degrees / 180;
 }

@@ -13,11 +13,10 @@ Asset.prototype.init = function(config) {
 	var _sprite		= config.sprite || 'error';					// A code in the sprite lookup table
 	var _velocity		= (config.velocity) ? new Vector(config.velocity.magnitude, config.velocity.direction) : new Vector(0, 0);
 	var _acceleration	= (config.acceleration) ? new Vector(config.acceleration.magnitude, config.acceleration.direction) : new Vector(0, 0);
-	var _elasticity	= config.elasticity || 1;					// Ranges from 0 - 1. Defines how much of velocity will be retains during a collision with another asset (1 => 100%)
+	//var _elasticity	= config.elasticity || 1;					// Ranges from 0 - 1. Defines how much of velocity will be retains during a collision with another asset (1 => 100%)
+	var _mass			= config.mass || 0;
 
 	//var _solid = true/false;
-	//var _mass;
-	//var _elasticity = 0-1;		// How much other assets bounce off it (1 is 100% bounce. 0 is no bounce)
 
 	// other properties? solidity, affected by gravity (mass)
 	// descriptor properties (name, description)
@@ -29,15 +28,16 @@ Asset.prototype.init = function(config) {
 		_grid.removeAssetFromRegion(_self);
 	}
 
-	_self.getVelocity = function() {
-		return {
-			direction:	_velocity.direction,
-			speed:		_velocity.speed
-		};
+	_self.getMass = function() {
+		return _mass;
 	}
 
-	_self.setSpeed = function(speed = 0) {
-		_velocity.setMagnitude(speed);
+	_self.getVelocity = function() {
+		return _velocity;
+	}
+
+	_self.setSpeed = function(magnitude = 0) {
+		_velocity.setMagnitude(magnitude);
 
 		return _self;
 	}
@@ -55,6 +55,8 @@ Asset.prototype.init = function(config) {
 		var distY = _velocity.getY() * -1;
 
 		if( _self.isObstructed(distX, distY) ) {
+			console.log(_self.getHandle())
+			console.log('collission')
 			return;
 		}
 
@@ -89,6 +91,21 @@ Asset.prototype.init = function(config) {
 
 	_self.accelerate = function() {
 		_velocity.combineWith(_acceleration);
+	}
+
+	// Implement an elastic collision between this and another asset
+	// TODO: add "crumpling" property, so assets can diffuse some of the kinetic energy
+	_self.collideWith = function(asset) {
+		var m1	= _self.getMass();
+		var m2	= asset.getMass();
+		var v1	= _self.getVelocity();
+		var v2	= asset.getVelocity();
+
+		var xMagnitudes = getElasticVelocities(m1, m2, v1.getX(), v2.getX());
+		var yMagnitudes = getElasticVelocities(m1, m2, v1.getY(), v2.getY());
+
+		v1.setMagnitudes(xMagnitudes.v1, yMagnitudes.v1);
+		v2.setMagnitudes(xMagnitudes.v2, yMagnitudes.v2);
 	}
 
 	_self.isObstructed = function(distX, distY) {
@@ -132,7 +149,10 @@ Asset.prototype.init = function(config) {
 								var xCollision = boxesOverlap(hitbox, ownHitboxX);
 								var yCollision = boxesOverlap(hitbox, ownHitboxY);
 
-								_velocity.ricochet(xCollision, yCollision, _elasticity);
+								_self.collideWith(asset);
+
+								//_velocity.ricochet(xCollision, yCollision, _elasticity);
+								// also apply ricochet to other asset
 
 								return true;
 							}
