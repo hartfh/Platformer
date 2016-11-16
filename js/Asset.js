@@ -13,6 +13,7 @@ Asset.prototype.init = function(config) {
 	var _sprite		= config.sprite || 'error';					// A code in the sprite lookup table
 	var _velocity		= (config.velocity) ? new Vector(config.velocity.magnitude, config.velocity.direction) : new Vector(0, 0);
 	var _acceleration	= (config.acceleration) ? new Vector(config.acceleration.magnitude, config.acceleration.direction) : new Vector(0, 0);
+	var _elasticity	= config.elasticity || 1;					// Ranges from 0 - 1. Defines how much of velocity will be retains during a collision with another asset (1 => 100%)
 
 	//var _solid = true/false;
 	//var _mass;
@@ -51,11 +52,9 @@ Asset.prototype.init = function(config) {
 	_self.move = function() {
 		// Determine disances to traverse
 		var distX = _velocity.getX();
-		var distY = _velocity.getY();
+		var distY = _velocity.getY() * -1;
 
 		if( _self.isObstructed(distX, distY) ) {
-			// TODO: apply elasticity changes (reversing velocity/acceleration). Needs to ricochet properly
-			_self.ricochet(distX, distY);
 			return;
 		}
 
@@ -92,14 +91,6 @@ Asset.prototype.init = function(config) {
 		_velocity.combineWith(_acceleration);
 	}
 
-	_self.ricochet = function(distX, distY) {
-		//console.log( _velocity.getX() );
-		//console.log( _velocity.getY() );
-
-		// Still need to determine the direction of obstruction.
-		// If distX is non-zero, reverse X velocity. Same for Y. Then convert velocity back into vector form (magnitude, direction)
-	}
-
 	_self.isObstructed = function(distX, distY) {
 		// TODO: check this or other assets for solidity
 		// if this asset isn't solid, can just return false right away.
@@ -127,12 +118,21 @@ Asset.prototype.init = function(config) {
 						for(var b in hitboxes) {
 							var hitbox = hitboxes[b];
 
+							// If a collision is detected, figure out if it's movement in the x- or y-direction, or both, that's causing it and
+							// cause "ricochet" behavior in the moving asset based on directionality of collision.
 							if( boxesOverlap(hitbox, ownHitbox) ) {
-								// TODO:
-								// If a collision will happen, get two new asset hitboxes.
-								// Compare each of those with boxesOverlapX/Y() to see which direction
-								// of travel will cause the conflict. Then return either x: true, y: true, or both
-								// to signal how ricochet should act upon the asset's velocity.
+								// Get hitboxes modified in only a single direction
+								var ownHitboxesX = _self.getHitboxes(distX, 0);
+								var ownHitboxesY = _self.getHitboxes(0, distY);
+
+								var ownHitboxX = ownHitboxesX[a];
+								var ownHitboxY = ownHitboxesY[a];
+
+								// Do hitbox overlap comparisons
+								var xCollision = boxesOverlap(hitbox, ownHitboxX);
+								var yCollision = boxesOverlap(hitbox, ownHitboxY);
+
+								_velocity.ricochet(xCollision, yCollision, _elasticity);
 
 								return true;
 							}
@@ -156,7 +156,6 @@ Asset.prototype.init = function(config) {
 			var pxDims	= _grid.getDimensions();
 
 			if( _self.isObstructed(adjust.x, adjust.y) ) {
-				_self.ricochet(adjust.x, adjust.y);
 				return;
 			}
 

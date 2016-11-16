@@ -25,9 +25,33 @@ Vector.prototype.init = function(magnitude, direction) {
 		_self.setMagnitude(magnitude);
 	}
 
+	_self.ricochet = function(flipX, flipY, elasticity = 1) {
+		var xMagnitude = _self.getX();
+		var yMagnitude = _self.getY();
+
+		if( flipX ) {
+			console.log('flippping X');
+			xMagnitude *= (-1 * elasticity);
+		}
+		if( flipY ) {
+			console.log('flippping Y');
+			yMagnitude *= (-1 * elasticity);
+		}
+
+		_self.setMagnitudes(xMagnitude, yMagnitude);
+	}
+
 	_self.setDirection = function(degrees) {
 		if( typeof(degrees) != 'number' ) {
 			throw new Error('Velocity direction component must be a number.');
+		}
+
+		// Correct for angles outside of 0-360 range
+		while( degrees < 0 ) {
+			degrees += 360;
+		}
+		while( degrees > 360 ) {
+			degrees -= 360;
 		}
 
 		_direction	= degrees;
@@ -39,7 +63,15 @@ Vector.prototype.init = function(magnitude, direction) {
 			throw new Error('Velocity magnitude component must be a number.');
 		}
 
-		_magnitude = magnitude;
+		_magnitude = Math.abs(magnitude);
+	}
+
+	_self.setMagnitudes = function(x, y) {
+		var magnitude = Math.sqrt( Math.pow(x, 2) + Math.pow(y, 2) );
+		var angle		= radiansToDegrees( Math.atan2(y, x) );
+
+		_self.setDirection(angle);
+		_self.setMagnitude(magnitude);
 	}
 
 	_self.getX = function() {
@@ -52,5 +84,9 @@ Vector.prototype.init = function(magnitude, direction) {
 		var yMagnitude = Math.sin(_radians) * _magnitude;
 
 		return Math.round(yMagnitude * 1000) / 1000;
+	}
+
+	_self.getDirection = function() {
+		return _direction;
 	}
 };

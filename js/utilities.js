@@ -47,7 +47,6 @@ function radiansToDegrees(radians) {
 	return radians * 180 / Math.PI;
 }
 
-/*
 function boxesOverlapX(box1, box2) {
 	if( box1.start.x <= box2.end.x && box1.end.x >= box2.start.x ) {
 		return true;
@@ -63,7 +62,6 @@ function boxesOverlapY(box1, box2) {
 
 	return false;
 }
-*/
 
 function boxesOverlap(box1, box2) {
 	if( box1.start.x <= box2.end.x && box1.end.x >= box2.start.x ) {
