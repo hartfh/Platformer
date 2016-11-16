@@ -55,8 +55,6 @@ Asset.prototype.init = function(config) {
 		var distY = _velocity.getY() * -1;
 
 		if( _self.isObstructed(distX, distY) ) {
-			console.log(_self.getHandle())
-			console.log('collission')
 			return;
 		}
 
@@ -70,7 +68,7 @@ Asset.prototype.init = function(config) {
 
 		var pxDims = _grid.getDimensions();
 
-		// Ensure the asset remaims within its PixelGrid's boundaries
+		// Ensure the asset remains within its PixelGrid's boundaries
 		if( _gridPos.x < 1 ) {
 			_gridPos.x = 1;
 		}

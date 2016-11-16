@@ -41,7 +41,7 @@ var PlatformerApp = function(config) {
 		handle:		'test-asset-3',
 		grid:		mainGrid,
 		layer:		testLayer,
-		position:		{x: 34, y: 9},
+		position:		{x: 34, y: 1},
 		sprite:		'player',
 		velocity:		{magnitude: 1, direction: 270},
 		acceleration:	{magnitude: 0.00, direction: 0},
@@ -60,11 +60,21 @@ var PlatformerApp = function(config) {
 	var vport = _viewportGenerator.addComponent({
 		handle:		'test-vport',
 		height:		110,
+		width:		210,
+		grid:		mainGrid,
+		gridPos:		{x: 1, y: 1},
+		screenPos:	{x: 20, y: 20}
+	});
+	/*
+	var vport2 = _viewportGenerator.addComponent({
+		handle:		'test-vport-2',
+		height:		110,
 		width:		510,
 		grid:		mainGrid,
 		gridPos:		{x: 50, y: 1},
-		screenPos:	{x: 1, y: 1}
+		screenPos:	{x: 300, y: 100}
 	});
+	*/
 
 	_self.draw = function() {
 		// TODO: determine which viewports need to be redrawn? Or have them specified in arguments
@@ -77,6 +87,8 @@ var PlatformerApp = function(config) {
 
 	_self.tick = function() {
 		// do everything that fits into one game tick
+
+		// viewports should be active/inactive
 	}
 
 	_self.pause = function() {

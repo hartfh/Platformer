@@ -29,6 +29,12 @@ Layer.prototype.init = function(config) {
 		_ctx.clearRect(start.x - 1, start.y - 1, end.x - 1, end.y - 1);
 	}
 
+
+	_self.debugFill = function(start, end) {
+		_ctx.fillStyle = 'orange';
+		_ctx.fillRect(start.x - 1, start.y - 1, end.x, end.y);
+	}
+
 	/**
 	 * Renders an asset's sprite.
 	 *
@@ -77,14 +83,6 @@ Layer.prototype.init = function(config) {
 				y: assetOrigin.y + screenOffset.y - gridOffset.y + sprite.origin.y - 1
 			};
 
-			// Correct for any negative render origin coordinates
-			if( renderOrigin.x < 0 ) {
-				renderOrigin.x = 0;
-			}
-			if( renderOrigin.y < 0 ) {
-				renderOrigin.y = 0;
-			}
-
 			var offset1 = {x: slice1.x - sprite.origin.x, y: slice1.y - sprite.origin.y};
 
 			if( offset1.x < 0 ) {
@@ -115,8 +113,21 @@ Layer.prototype.init = function(config) {
 				clearY = 0;
 			}
 
-			_ctx.clearRect(renderOrigin.x, renderOrigin.y, clearX, clearY);
-			_ctx.drawImage(img, offset1.x, offset1.y, offset2.x, offset2.y, renderOrigin.x, renderOrigin.y, offset2.x, offset2.y);
+			var finalRenderOrigin = {
+				x: renderOrigin.x + offset1.x,
+				y: renderOrigin.y + offset1.y
+			};
+
+			// Correct for any negative render origin coordinates
+			if( finalRenderOrigin.x < 0 ) {
+				finalRenderOrigin.x = 0;
+			}
+			if( finalRenderOrigin.y < 0 ) {
+				finalRenderOrigin.y = 0;
+			}
+
+			_ctx.clearRect(finalRenderOrigin.x, finalRenderOrigin.y, clearX, clearY);
+			_ctx.drawImage(img, offset1.x, offset1.y, offset2.x, offset2.y, finalRenderOrigin.x, finalRenderOrigin.y, offset2.x, offset2.y);
 		}
 	}
 

@@ -138,6 +138,14 @@ Viewport.prototype.init = function(config) {
 		var assets		= _self.getVisibleAssets();
 		var vportBounds	= _self.getBounds();
 
+		//DEBUG
+		for(var l in layers) {
+			var layer = layers[l];
+
+			layer.debugFill(_screenPos, {x: _width, y: _height});
+		}
+		//END DEBUG
+
 		for(var i in assets) {
 			var asset = assets[i];
 
