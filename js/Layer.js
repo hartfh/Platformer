@@ -31,7 +31,7 @@ Layer.prototype.init = function(config) {
 
 
 	_self.debugFill = function(start, end) {
-		_ctx.fillStyle = 'orange';
+		_ctx.fillStyle = 'rgba(0, 40, 15, 1)';
 		_ctx.fillRect(start.x - 1, start.y - 1, end.x, end.y);
 	}
 
@@ -61,8 +61,9 @@ Layer.prototype.init = function(config) {
 		for(var i in assetSprites) {
 			var sprite	= assetSprites[i];
 			var img		= new Image();
+			var curFrames	= asset.getFrames();
 
-			img.src = ASSETS_PATH + sprite.image;
+			img.src = ASSETS_PATH + sprite.images[ curFrames[i] ];
 
 			// If sprite is entirely outside the viewport, don't bother trying to render it
 			if( slice1.x > sprite.origin.x + sprite.width ) {

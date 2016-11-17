@@ -46,7 +46,9 @@ const SPRITE_KEY = {
 				height:		32,
 				width:		32,
 				origin:		{x: 0, y: 0},
-				image:		'test-sprite-1.png'
+				time:		false,
+				repeat:		false,
+				images:		['test-sprite-1.png']
 			}
 		],
 		hitboxes:		[
@@ -56,6 +58,27 @@ const SPRITE_KEY = {
 			}
 		]
 	},
+	'repeater':		{
+		height:	32,
+		width:	32,
+		sprites:	[
+			{
+				height:		32,
+				width:		32,
+				origin:		{x: 0, y: 0},
+				time:		false,
+				repeat:		false,
+				images:		['test-sprite-2.png']
+			}
+		],
+		hitboxes:		[
+			{
+				start:	{x:	0,	y:	0},
+				end:		{x:	32,	y:	32}
+			}
+		]
+	},
+	/*
 	'error':			{
 		height:	32,
 		width:	32,
@@ -68,6 +91,7 @@ const SPRITE_KEY = {
 			}
 		]
 	},
+	*/
 	'multi1':			{
 		height:	64,
 		width:	64,
@@ -76,19 +100,25 @@ const SPRITE_KEY = {
 				height:		32,
 				width:		32,
 				origin:		{x: 0, y: 0},
-				image:		'multisprite-1.png'
+				time:		false,
+				repeat:		false,
+				images:		['multisprite-1.png']
 			},
 			{
 				height:		32,
 				width:		32,
 				origin:		{x: 32, y: 0},
-				image:		'multisprite-2.png'
+				time:		false,
+				repeat:		false,
+				images:		['multisprite-2.png']
 			},
 			{
 				height:		32,
 				width:		32,
 				origin:		{x: 0, y: 32},
-				image:		'multisprite-3.png'
+				time:		1000,
+				repeat:		false,
+				images:		['multisprite-3.png', 'multisprite-3-2.png']
 			},
 		],
 		hitboxes:		[

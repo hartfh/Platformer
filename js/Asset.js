@@ -14,12 +14,37 @@ Asset.prototype.init = function(config) {
 	var _velocity		= (config.velocity) ? new Vector(config.velocity.magnitude, config.velocity.direction) : new Vector(0, 0);
 	var _acceleration	= (config.acceleration) ? new Vector(config.acceleration.magnitude, config.acceleration.direction) : new Vector(0, 0);
 	//var _elasticity	= config.elasticity || 1;					// Ranges from 0 - 1. Defines how much of velocity will be retains during a collision with another asset (1 => 100%)
+	// var _crumple	= 0; // how much kinetic energy gets dispersed during collisions
 	var _mass			= config.mass || 0;
+	// _immobile = false; // not moved during collisions
+	var _frames		= [];									// Current frame each sprite is on. Gets further initialized during initialSetup()
 
 	//var _solid = true/false;
 
 	// other properties? solidity, affected by gravity (mass)
 	// descriptor properties (name, description)
+
+
+	// Handles everything that happens per game tick
+	_self.cycle = function(time) {
+		_self.checkSpriteFrames(time);
+	}
+
+	_self.checkSpriteFrames = function(time) {
+		var sprites = SPRITE_KEY[_sprite].sprites;
+
+		for(var i in sprites) {
+			var sprite	= sprites[i];
+			var frameTime	= sprite.time;
+
+			if( frameTime ) {
+				var numFrames	= sprite.images.length;
+				var frame		= Math.floor( ( time / frameTime ) % numFrames );
+
+				_frames[i] = frame;
+			}
+		}
+	}
 
 	/**
 	 * Cleans up any stray references to this Asset.
@@ -34,6 +59,10 @@ Asset.prototype.init = function(config) {
 
 	_self.getVelocity = function() {
 		return _velocity;
+	}
+
+	_self.getFrames = function() {
+		return _frames;
 	}
 
 	_self.setSpeed = function(magnitude = 0) {
@@ -322,5 +351,14 @@ Asset.prototype.init = function(config) {
 		return sprites;
 	}
 
-	_grid.addAssetToRegions(_self);
+	_self.initialSetup = function() {
+		_grid.addAssetToRegions(_self);
+
+		// Set all sprite frames to 0
+		for(var i in SPRITE_KEY[_sprite].sprites) {
+			_frames.push(0);
+		}
+	}
+
+	_self.initialSetup();
 }
