@@ -21,6 +21,29 @@ var PlatformerApp = function(config) {
 		height:		600,
 		width:		900
 	});
+	/*
+	var testAssetA = _assetGenerator.addComponent({
+		handle:		'test-asset-A',
+		grid:		mainGrid,
+		layer:		testLayer,
+		position:		{x: 201, y: 101},
+		sprite:		'player',
+		velocity:		{magnitude: 0, direction: 315},
+		acceleration:	{magnitude: 0.0, direction: 0},
+		mass:		100.00
+	});
+	var testAssetB = _assetGenerator.addComponent({
+		handle:		'test-asset-B',
+		grid:		mainGrid,
+		layer:		testLayer,
+		position:		{x: 238, y: 138},
+		sprite:		'player',
+		velocity:		{magnitude: 1, direction: 150},
+		acceleration:	{magnitude: 0.0, direction: 0},
+		mass:		300.00
+	});
+	*/
+	/*
 	var testAsset = _assetGenerator.addComponent({
 		handle:		'test-asset-0',
 		grid:		mainGrid,
@@ -61,46 +84,26 @@ var PlatformerApp = function(config) {
 		acceleration:	{magnitude: 0.00, direction: 0},
 		mass:		50.00
 	});
-	var testAsset5 = _assetGenerator.addComponent({
-		handle:		'z-test-asset-5',
-		grid:		mainGrid,
-		layer:		testLayer,
-		position:		{x: 200, y: 100},
-		sprite:		'player',
-		velocity:		{magnitude: 2, direction: 160},
-		acceleration:	{magnitude: 0.00, direction: 0},
-		mass:		75.00
-	});
-	var testAsset6 = _assetGenerator.addComponent({
-		handle:		'z-test-asset-6',
-		grid:		mainGrid,
-		layer:		testLayer,
-		position:		{x: 100, y: 300},
-		sprite:		'player',
-		velocity:		{magnitude: 2, direction: 80},
-		acceleration:	{magnitude: 0.00, direction: 0},
-		mass:		75.00
-	});
-	var testAsset7 = _assetGenerator.addComponent({
-		handle:		'z-test-asset-7',
-		grid:		mainGrid,
-		layer:		testLayer,
-		position:		{x: 500, y: 400},
-		sprite:		'player',
-		velocity:		{magnitude: 2, direction: 75},
-		acceleration:	{magnitude: 0.00, direction: 0},
-		mass:		175.00
-	});
-	var testAsset8 = _assetGenerator.addComponent({
-		handle:		'z-test-asset-8',
-		grid:		mainGrid,
-		layer:		testLayer,
-		position:		{x: 400, y: 400},
-		sprite:		'player',
-		velocity:		{magnitude: 1, direction: 125},
-		acceleration:	{magnitude: 0.00, direction: 0},
-		mass:		275.00
-	});
+	*/
+
+	for(var i = 0; i < 20; i++) {
+		var randX = Math.floor( Math.random() * 800 );
+		var randY = Math.floor( Math.random() * 530 );
+		var randDir = Math.floor( Math.random() * 360 );
+		var randMass = Math.floor( Math.random() * 500 );
+
+		_assetGenerator.addComponent({
+			handle:		'test-asset-' + i,
+			grid:		mainGrid,
+			layer:		testLayer,
+			position:		{x: randX, y: randY},
+			sprite:		'player',
+			velocity:		{magnitude: 4, direction: randDir},
+			acceleration:	{magnitude: 0.00, direction: 0},
+			mass:		randMass
+		});
+	}
+
 	var vport = _viewportGenerator.addComponent({
 		handle:		'test-vport',
 		height:		434,
@@ -110,7 +113,7 @@ var PlatformerApp = function(config) {
 		screenPos:	{x: 20, y: 20}
 	});
 	/*
-	var vport = _viewportGenerator.addComponent({
+	var vport2 = _viewportGenerator.addComponent({
 		handle:		'test-vport',
 		height:		210,
 		width:		210,
@@ -148,23 +151,44 @@ var PlatformerApp = function(config) {
 	var gameTime = 1;
 	var oldTime = performance.now();
 
+	//testAssetA.move();
+	//testAssetB.move();
+	//testAssetB.move();
+	//testAssetB.move();
+
 	_self.draw();
 
+	/*
+	GENERAL NOTES:
 
-	const INTERVAL = 20; // current lowest time interval game can seem to run at
+	Ideas:
+	Underwater setting.
+	Vessel has "hard points" that upgrades can be affixed to.
+	Upgrades: weapons, shields, detection equipment (lights, x-ray, sonar, motion sensor)
+	Attached upgrades work automatically. Possibly inclue some programmable logic for one/all upgrades.
+	Or hard-points can each have settings, e.g. sweep, track(?), adjust to vessel motion.
+
+	To-do's:
+	Implement ray-casting.
+	*/
+
+
+	const INTERVAL = 50;
 	if( 0 ) {
 		setInterval(function() {
 			gameTime += INTERVAL;
 
+			_assetGenerator.eachComponent(function(asset, handle) {
+				asset.move();
+			});
+
+			/*
 			testAsset.move();
 			testAsset2.move();
 			testAsset3.move();
 			testAsset4.move();
-			testAsset5.move();
-			testAsset6.move();
-			testAsset7.move();
-			testAsset8.move();
 			testAsset4.cycle(gameTime);
+			*/
 			//testAsset3.accelerate();
 
 			/*

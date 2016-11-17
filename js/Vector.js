@@ -25,22 +25,6 @@ Vector.prototype.init = function(magnitude, direction) {
 		_self.setMagnitude(magnitude);
 	}
 
-	_self.ricochet = function(flipX, flipY, elasticity = 1) {
-		var xMagnitude = _self.getX();
-		var yMagnitude = _self.getY();
-
-		// Reverse the x-component
-		if( flipX ) {
-			xMagnitude *= (-1 * elasticity);
-		}
-		// Reverse the y-component
-		if( flipY ) {
-			yMagnitude *= (-1 * elasticity);
-		}
-
-		_self.setMagnitudes(xMagnitude, yMagnitude);
-	}
-
 	_self.setDirection = function(degrees) {
 		if( typeof(degrees) != 'number' ) {
 			throw new Error('Velocity direction component must be a number.');

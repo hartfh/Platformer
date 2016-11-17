@@ -162,24 +162,8 @@ Asset.prototype.init = function(config) {
 						for(var b in hitboxes) {
 							var hitbox = hitboxes[b];
 
-							// If a collision is detected, figure out if it's movement in the x- or y-direction, or both, that's causing it and
-							// cause "ricochet" behavior in the moving asset based on directionality of collision.
 							if( boxesOverlap(hitbox, ownHitbox) ) {
-								// Get hitboxes modified in only a single direction
-								var ownHitboxesX = _self.getHitboxes(distX, 0);
-								var ownHitboxesY = _self.getHitboxes(0, distY);
-
-								var ownHitboxX = ownHitboxesX[a];
-								var ownHitboxY = ownHitboxesY[a];
-
-								// Do hitbox overlap comparisons
-								var xCollision = boxesOverlap(hitbox, ownHitboxX);
-								var yCollision = boxesOverlap(hitbox, ownHitboxY);
-
 								_self.collideWith(asset);
-
-								//_velocity.ricochet(xCollision, yCollision, _elasticity);
-								// also apply ricochet to other asset
 
 								return true;
 							}
@@ -265,6 +249,20 @@ Asset.prototype.init = function(config) {
 		// Determine the direction of travel and increase the hitboxes' dimensions in that direction
 		var startMod	= {x: 0, y: 0};
 		var endMod	= {x: 0, y: 0};
+
+		// Round to the biggest whole numbers
+		if( distX < 0 ) {
+			distX = Math.ceil( Math.abs(distX) ) * -1;
+		}
+		if( distX > 0 ) {
+			distX = Math.ceil( Math.abs(distX) );
+		}
+		if( distY < 0 ) {
+			distY = Math.ceil( Math.abs(distY) ) * -1;
+		}
+		if( distY > 0 ) {
+			distY = Math.ceil( Math.abs(distY) );
+		}
 
 		if( distX < 0 ) {
 			startMod.x = distX;

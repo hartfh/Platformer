@@ -66,6 +66,15 @@ Viewport.prototype.init = function(config) {
 		return _screenPos;
 	}
 
+	// Affix viewport's gridPosition to an asset
+	_self.pinToAsset = function() {
+
+	}
+
+	_self.unpin = function() {
+
+	}
+
 	/**
 	 * Update the position coordinates by one pixel in a single direction.
 	 *

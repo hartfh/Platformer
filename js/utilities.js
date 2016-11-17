@@ -57,22 +57,6 @@ function radiansToDegrees(radians) {
 	return radians * 180 / Math.PI;
 }
 
-function boxesOverlapX(box1, box2) {
-	if( box1.start.x <= box2.end.x && box1.end.x >= box2.start.x ) {
-		return true;
-	}
-
-	return false;
-}
-
-function boxesOverlapY(box1, box2) {
-	if( box1.start.y <= box2.end.y && box1.end.y >= box2.start.y ) {
-		return true;
-	}
-
-	return false;
-}
-
 function boxesOverlap(box1, box2) {
 	if( box1.start.x <= box2.end.x && box1.end.x >= box2.start.x ) {
 		if( box1.start.y <= box2.end.y && box1.end.y >= box2.start.y ) {
@@ -81,23 +65,4 @@ function boxesOverlap(box1, box2) {
 	}
 
 	return false;
-}
-
-/**
- * DEPRECATED?
- *
- * Translates a sprite code into a path to an image file.
- *
- * @param		{string}	code		The sprite's key in the SPRITE_KEY lookup table
- * @return	{string}			An image file path
- */
-function getSpriteImage(code) {
-	if( typeof(code) != 'string' || !SPRITE_KEY.hasOwnProperty(code) ) {
-		throw new Error('Sprite code does not refer to an image file. Check Asset configuration or SPRITE_KEY.');
-	}
-
-	var directory	= 'assets/';
-	var spritePath	= directory + SPRITE_KEY[code];
-
-	return spritePath;
 }
