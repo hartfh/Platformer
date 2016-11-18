@@ -77,34 +77,34 @@ Viewport.prototype.init = function(config) {
 		_pinnedAsset = false;
 	}
 
-	_self.alignWithAsset = function() {
+	_self.alignWithAsset = function(edgeBufferX, edgeBufferY) {
 		if( _pinnedAsset ) {
 			var pinnedAsset	= _engine.getAsset(_pinnedAsset);
 			var assetPosition	= pinnedAsset.getPosition();
 			var assetDimensions	= pinnedAsset.getDimensions();
 			var gridDimensions	= _grid.getDimensions();
 
-
 			var vportHalfWidth	= _width * 0.5;
 			var vportHalfHeight	= _height * 0.5;
 
-			var halfAssetWidth	= assetDimensions.width * 0.5;
-			var halfAssetHeight	= assetDimensions.height * 0.5;
+			var assetHalfWidth	= assetDimensions.width * 0.5;
+			var assetHalfHeight	= assetDimensions.height * 0.5;
 
-			var assetCenterX	= assetPosition.x + halfAssetWidth;
-			var assetCenterY	= assetPosition.y + halfAssetHeight;
+			var assetCenterX	= assetPosition.x + assetHalfWidth;
+			var assetCenterY	= assetPosition.y + assetHalfHeight;
 
-			if( assetCenterX > vportHalfWidth ) {
+			if( assetCenterX >= vportHalfWidth ) {
 				if( assetCenterX < gridDimensions.width - vportHalfWidth ) {
 					_gridPos.x = assetCenterX - vportHalfWidth;
 				}
 			}
-			if( assetCenterY > vportHalfHeight ) {
+			if( assetCenterY >= vportHalfHeight ) {
 				if( assetCenterY < gridDimensions.height - vportHalfHeight ) {
 					_gridPos.y = assetCenterY - vportHalfHeight;
 				}
 			}
-			console.log(_gridPos)
+
+			_self.enforceGridLimits();
 		}
 	}
 
@@ -116,24 +116,29 @@ Viewport.prototype.init = function(config) {
 	_self.shift = function(direction) {
 		if( DIRECTIONS.hasOwnProperty(direction) ) {
 			var adjust	= DIRECTIONS[direction];
-			var pxDims	= _grid.getDimensions();
 
 			_gridPos.x += adjust.x;
 			_gridPos.y += adjust.y;
 
-			// Ensure the viewport remains within its PixelGrid's boundaries
-			if( _gridPos.x < 1 ) {
-				_gridPos.x = 1;
-			}
-			if( _gridPos.y < 1 ) {
-				_gridPos.y = 1;
-			}
-			if( _gridPos.x >= pxDims.width ) {
-				_gridPos.x = pxDims.width - 1;
-			}
-			if( _gridPos.y >= pxDims.height ) {
-				_gridPos.y = pxDims.height - 1;
-			}
+			_self.enforceGridLimits();
+		}
+	}
+
+	_self.enforceGridLimits = function() {
+		var pxDims	= _grid.getDimensions();
+
+		// Ensure the viewport remains within its PixelGrid's boundaries
+		if( _gridPos.x < 1 ) {
+			_gridPos.x = 1;
+		}
+		if( _gridPos.y < 1 ) {
+			_gridPos.y = 1;
+		}
+		if( _gridPos.x + _width >= pxDims.width ) {
+			_gridPos.x = pxDims.width - _width - 1;
+		}
+		if( _gridPos.y + _height >= pxDims.height ) {
+			_gridPos.y = pxDims.height - _height - 1;
 		}
 	}
 
@@ -176,7 +181,7 @@ Viewport.prototype.init = function(config) {
 
 	_self.draw = function(layers) {
 		_self.clear(layers);
-		_self.alignWithAsset();
+		_self.alignWithAsset(0, 0);
 
 		var assets		= _self.getVisibleAssets();
 		var vportBounds	= _self.getBounds();

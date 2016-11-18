@@ -95,7 +95,8 @@ Asset.prototype.init = function(config) {
 		_gridPos.x = Math.round(_gridPos.x * 1000) / 1000;
 		_gridPos.y = Math.round(_gridPos.y * 1000) / 1000;
 
-		var pxDims = _grid.getDimensions();
+		var pxDims	= _grid.getDimensions();
+		var assetDims	= _self.getDimensions();
 
 		// Ensure the asset remains within its PixelGrid's boundaries
 		if( _gridPos.x < 1 ) {
@@ -104,11 +105,11 @@ Asset.prototype.init = function(config) {
 		if( _gridPos.y < 1 ) {
 			_gridPos.y = 1;
 		}
-		if( _gridPos.x >= pxDims.width ) {
-			_gridPos.x = pxDims.width - 1;
+		if( _gridPos.x + assetDims.width >= pxDims.width ) {
+			_gridPos.x = pxDims.width - assetDims.width - 1;
 		}
-		if( _gridPos.y >= pxDims.height ) {
-			_gridPos.y = pxDims.height - 1;
+		if( _gridPos.y + assetDims.height >= pxDims.height ) {
+			_gridPos.y = pxDims.height - assetDims.height - 1;
 		}
 
 		_grid.checkRegion(_self);

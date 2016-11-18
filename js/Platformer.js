@@ -14,7 +14,7 @@ var PlatformerApp = function(config) {
 	var mainGrid = _pxGridGenerator.addComponent({
 		handle:		'test-grid',
 		width:		880,
-		height:		540
+		height:		560
 	});
 	var testLayer = _layerGenerator.addComponent({
 		handle:		'test-layer',
@@ -26,7 +26,7 @@ var PlatformerApp = function(config) {
 		handle:		'test-asset-A',
 		grid:		mainGrid,
 		layer:		testLayer,
-		position:		{x: 201, y: 101},
+		position:		{x: 101, y: 101},
 		sprite:		'player',
 		velocity:		{magnitude: 0, direction: 315},
 		acceleration:	{magnitude: 0.0, direction: 0},
@@ -36,9 +36,29 @@ var PlatformerApp = function(config) {
 		handle:		'test-asset-B',
 		grid:		mainGrid,
 		layer:		testLayer,
-		position:		{x: 438, y: 438},
+		position:		{x: 350, y: 240},
 		sprite:		'player',
 		velocity:		{magnitude: 5.5, direction: 135},
+		acceleration:	{magnitude: 0.0, direction: 0},
+		mass:		300.00
+	});
+	var testAssetC = _assetGenerator.addComponent({
+		handle:		'test-asset-B',
+		grid:		mainGrid,
+		layer:		testLayer,
+		position:		{x: 350, y: 120},
+		sprite:		'player',
+		velocity:		{magnitude: 0, direction: 135},
+		acceleration:	{magnitude: 0.0, direction: 0},
+		mass:		300.00
+	});
+	var testAssetD = _assetGenerator.addComponent({
+		handle:		'test-asset-B',
+		grid:		mainGrid,
+		layer:		testLayer,
+		position:		{x: 260, y: 280},
+		sprite:		'player',
+		velocity:		{magnitude: 0, direction: 135},
 		acceleration:	{magnitude: 0.0, direction: 0},
 		mass:		300.00
 	});
@@ -93,8 +113,8 @@ var PlatformerApp = function(config) {
 		var randDir = Math.floor( Math.random() * 360 );
 		var randMass = Math.floor( Math.random() * 500 );
 
-		_assetGenerator.addComponent({
-			handle:		'test-asset-' + i,
+		var test = _assetGenerator.addComponent({
+			handle:		'test-asset',
 			grid:		mainGrid,
 			layer:		testLayer,
 			position:		{x: randX, y: randY},
@@ -114,7 +134,6 @@ var PlatformerApp = function(config) {
 		gridPos:		{x: 1, y: 1},
 		screenPos:	{x: 20, y: 20}
 	});
-	/*
 	var vport2 = _viewportGenerator.addComponent({
 		handle:		'test-vport',
 		height:		210,
@@ -123,7 +142,6 @@ var PlatformerApp = function(config) {
 		gridPos:		{x: 100, y: 100},
 		screenPos:	{x: 650, y: 200}
 	});
-	*/
 
 	_self.getAsset = function(assetHandle) {
 		return _assetGenerator.getComponent(assetHandle);
@@ -162,7 +180,7 @@ var PlatformerApp = function(config) {
 	//testAssetB.move();
 	//testAssetB.move();
 
-	vport.pinToAsset(testAssetB.getHandle());
+	vport2.pinToAsset(testAssetB.getHandle());
 
 	_self.draw();
 
@@ -178,6 +196,8 @@ var PlatformerApp = function(config) {
 
 	To-do's:
 	Implement ray-casting.
+	Repeating sprites??
+	Parallaxing backgrounds/layers
 	*/
 
 
