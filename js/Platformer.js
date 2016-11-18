@@ -4,10 +4,10 @@ var PlatformerApp = function(config) {
 	}
 
 	var _self				= this;
-	var _layerGenerator		= new ComponentGenerator(Layer);
-	var _viewportGenerator	= new ComponentGenerator(Viewport);
-	var _pxGridGenerator	= new ComponentGenerator(PixelGrid);
-	var _assetGenerator		= new ComponentGenerator(Asset);
+	var _layerGenerator		= new ComponentGenerator(Layer, _self);
+	var _viewportGenerator	= new ComponentGenerator(Viewport, _self);
+	var _pxGridGenerator	= new ComponentGenerator(PixelGrid, _self);
+	var _assetGenerator		= new ComponentGenerator(Asset, _self);
 
 	// Consider having Layer, Viewport and Grid (and Asset?) all extend a basic Component class.
 
@@ -21,7 +21,7 @@ var PlatformerApp = function(config) {
 		height:		600,
 		width:		900
 	});
-	/*
+
 	var testAssetA = _assetGenerator.addComponent({
 		handle:		'test-asset-A',
 		grid:		mainGrid,
@@ -36,13 +36,13 @@ var PlatformerApp = function(config) {
 		handle:		'test-asset-B',
 		grid:		mainGrid,
 		layer:		testLayer,
-		position:		{x: 238, y: 138},
+		position:		{x: 438, y: 438},
 		sprite:		'player',
-		velocity:		{magnitude: 1, direction: 150},
+		velocity:		{magnitude: 5.5, direction: 135},
 		acceleration:	{magnitude: 0.0, direction: 0},
 		mass:		300.00
 	});
-	*/
+
 	/*
 	var testAsset = _assetGenerator.addComponent({
 		handle:		'test-asset-0',
@@ -86,6 +86,7 @@ var PlatformerApp = function(config) {
 	});
 	*/
 
+	/*
 	for(var i = 0; i < 20; i++) {
 		var randX = Math.floor( Math.random() * 800 );
 		var randY = Math.floor( Math.random() * 530 );
@@ -103,6 +104,7 @@ var PlatformerApp = function(config) {
 			mass:		randMass
 		});
 	}
+	*/
 
 	var vport = _viewportGenerator.addComponent({
 		handle:		'test-vport',
@@ -122,6 +124,10 @@ var PlatformerApp = function(config) {
 		screenPos:	{x: 650, y: 200}
 	});
 	*/
+
+	_self.getAsset = function(assetHandle) {
+		return _assetGenerator.getComponent(assetHandle);
+	}
 
 	_self.draw = function() {
 		// TODO: determine which viewports need to be redrawn? Or have them specified in arguments
@@ -156,6 +162,8 @@ var PlatformerApp = function(config) {
 	//testAssetB.move();
 	//testAssetB.move();
 
+	vport.pinToAsset(testAssetB.getHandle());
+
 	_self.draw();
 
 	/*
@@ -174,13 +182,17 @@ var PlatformerApp = function(config) {
 
 
 	const INTERVAL = 50;
-	if( 0 ) {
+	if( 1 ) {
 		setInterval(function() {
 			gameTime += INTERVAL;
 
+			/*
 			_assetGenerator.eachComponent(function(asset, handle) {
 				asset.move();
 			});
+			*/
+
+			testAssetB.move();
 
 			/*
 			testAsset.move();

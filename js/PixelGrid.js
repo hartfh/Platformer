@@ -9,6 +9,7 @@ PixelGrid.prototype.init = function(config) {
 
 	var _self		= this;
 	var _handle	= config.handle || '';
+	var _engine	= config.engine || false;
 	var _height	= config.height || 0;	// Pixel width
 	var _width	= config.width || 0;	// Pixel height
 	var _regions	= [];				// 2-Dimensional array of objects with references to assets

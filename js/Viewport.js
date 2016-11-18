@@ -5,13 +5,15 @@ var Viewport = function(config) {
 }
 
 Viewport.prototype.init = function(config) {
-	var _self		= this;
-	var _handle	= config.handle || '';
-	var _height	= config.height || 0;				// Screen pixel height
-	var _width	= config.width || 0;				// Screen pixel width
-	var _grid		= config.grid;						// A PixelGrid object
-	var _gridPos	= config.gridPos || {x: 1, y: 1};		// Position within the PixelGrid
-	var _screenPos	= config.screenPos || {x: 0, y: 0};	// Position of the Viewport element on the screen or within its parent container
+	var _self			= this;
+	var _handle		= config.handle || '';
+	var _engine		= config.engine || false;
+	var _height		= config.height || 0;				// Screen pixel height
+	var _width		= config.width || 0;				// Screen pixel width
+	var _grid			= config.grid;						// A PixelGrid object
+	var _gridPos		= config.gridPos || {x: 1, y: 1};		// Position within the PixelGrid
+	var _screenPos		= config.screenPos || {x: 0, y: 0};	// Position of the Viewport element on the screen or within its parent container
+	var _pinnedAsset	= false;
 
 	// var order/z-index
 
@@ -67,12 +69,43 @@ Viewport.prototype.init = function(config) {
 	}
 
 	// Affix viewport's gridPosition to an asset
-	_self.pinToAsset = function() {
-
+	_self.pinToAsset = function(assetHandle) {
+		_pinnedAsset = assetHandle;
 	}
 
 	_self.unpin = function() {
+		_pinnedAsset = false;
+	}
 
+	_self.alignWithAsset = function() {
+		if( _pinnedAsset ) {
+			var pinnedAsset	= _engine.getAsset(_pinnedAsset);
+			var assetPosition	= pinnedAsset.getPosition();
+			var assetDimensions	= pinnedAsset.getDimensions();
+			var gridDimensions	= _grid.getDimensions();
+
+
+			var vportHalfWidth	= _width * 0.5;
+			var vportHalfHeight	= _height * 0.5;
+
+			var halfAssetWidth	= assetDimensions.width * 0.5;
+			var halfAssetHeight	= assetDimensions.height * 0.5;
+
+			var assetCenterX	= assetPosition.x + halfAssetWidth;
+			var assetCenterY	= assetPosition.y + halfAssetHeight;
+
+			if( assetCenterX > vportHalfWidth ) {
+				if( assetCenterX < gridDimensions.width - vportHalfWidth ) {
+					_gridPos.x = assetCenterX - vportHalfWidth;
+				}
+			}
+			if( assetCenterY > vportHalfHeight ) {
+				if( assetCenterY < gridDimensions.height - vportHalfHeight ) {
+					_gridPos.y = assetCenterY - vportHalfHeight;
+				}
+			}
+			console.log(_gridPos)
+		}
 	}
 
 	/**
@@ -143,6 +176,7 @@ Viewport.prototype.init = function(config) {
 
 	_self.draw = function(layers) {
 		_self.clear(layers);
+		_self.alignWithAsset();
 
 		var assets		= _self.getVisibleAssets();
 		var vportBounds	= _self.getBounds();

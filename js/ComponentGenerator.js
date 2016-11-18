@@ -1,12 +1,13 @@
-var ComponentGenerator = function(ComponentClass) {
-	this.init(ComponentClass);
+var ComponentGenerator = function(ComponentClass, engine) {
+	this.init(ComponentClass, engine);
 };
 
-ComponentGenerator.prototype.init = function(ComponentClass) {
+ComponentGenerator.prototype.init = function(ComponentClass, engine) {
 	var _self				= this;
 	var _ComponentClass		= ComponentClass;	// A class to be instantiated when adding components
 	var _components		= {};			// A container for all components tracked as they're generated
 	var _componentCounter	= 0;				// Used to create a unique ID for each component. Incremented with each new component
+	var _engine			= engine;
 
 	/**
 	 * Instantiates a new object of type _ComponentClass and adds it to _components.
@@ -18,6 +19,7 @@ ComponentGenerator.prototype.init = function(ComponentClass) {
 		var handle = componentConfig.handle + '-' + _componentCounter;
 
 		componentConfig.handle = handle;
+		componentConfig.engine = _engine;
 
 		var component = new _ComponentClass(componentConfig);
 
