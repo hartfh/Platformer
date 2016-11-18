@@ -136,8 +136,8 @@ var PlatformerApp = function(config) {
 	});
 	var vport2 = _viewportGenerator.addComponent({
 		handle:		'test-vport',
-		height:		210,
-		width:		210,
+		height:		230,
+		width:		230,
 		grid:		mainGrid,
 		gridPos:		{x: 100, y: 100},
 		screenPos:	{x: 650, y: 200}

@@ -87,24 +87,60 @@ Viewport.prototype.init = function(config) {
 			var vportHalfWidth	= _width * 0.5;
 			var vportHalfHeight	= _height * 0.5;
 
-			var assetHalfWidth	= assetDimensions.width * 0.5;
-			var assetHalfHeight	= assetDimensions.height * 0.5;
+			var vportCenterX	= vportHalfWidth + _gridPos.x;
+			var vportCenterY	= vportHalfHeight + _gridPos.y;
 
-			var assetCenterX	= assetPosition.x + assetHalfWidth;
-			var assetCenterY	= assetPosition.y + assetHalfHeight;
+			var assetCenterX	= assetPosition.x + assetDimensions.width * 0.5;
+			var assetCenterY	= assetPosition.y + assetDimensions.height * 0.5;
 
+			if( assetCenterX > vportCenterX + edgeBufferX ) {
+				if( assetCenterX >= vportHalfWidth ) {
+					if( assetCenterX < gridDimensions.width - vportHalfWidth ) {
+						_gridPos.x = assetCenterX - vportHalfWidth - edgeBufferX;
+					}
+				}
+			}
+			if( assetCenterX < vportCenterX - edgeBufferX ) {
+				if( assetCenterX >= vportHalfWidth ) {
+					if( assetCenterX < gridDimensions.width - vportHalfWidth ) {
+						_gridPos.x = assetCenterX - vportHalfWidth + edgeBufferX;
+					}
+				}
+			}
+
+			if( assetCenterY > vportCenterY + edgeBufferY ) {
+				if( assetCenterY >= vportHalfHeight ) {
+					if( assetCenterY < gridDimensions.height - vportHalfHeight ) {
+						_gridPos.y = assetCenterY - vportHalfHeight - edgeBufferY;
+					}
+				}
+			}
+			if( assetCenterY < vportCenterY - edgeBufferY ) {
+				if( assetCenterY >= vportHalfHeight ) {
+					if( assetCenterY < gridDimensions.height - vportHalfHeight ) {
+						_gridPos.y = assetCenterY - vportHalfHeight + edgeBufferY;
+					}
+				}
+			}
+
+			// Old
+			/*
 			if( assetCenterX >= vportHalfWidth ) {
 				if( assetCenterX < gridDimensions.width - vportHalfWidth ) {
 					_gridPos.x = assetCenterX - vportHalfWidth;
 				}
 			}
+			*/
+			/*
 			if( assetCenterY >= vportHalfHeight ) {
 				if( assetCenterY < gridDimensions.height - vportHalfHeight ) {
 					_gridPos.y = assetCenterY - vportHalfHeight;
 				}
 			}
+			*/
 
 			_self.enforceGridLimits();
+			console.log(_gridPos)
 		}
 	}
 
@@ -181,7 +217,7 @@ Viewport.prototype.init = function(config) {
 
 	_self.draw = function(layers) {
 		_self.clear(layers);
-		_self.alignWithAsset(0, 0);
+		_self.alignWithAsset(60, 60);
 
 		var assets		= _self.getVisibleAssets();
 		var vportBounds	= _self.getBounds();
