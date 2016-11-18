@@ -38,7 +38,7 @@ var PlatformerApp = function(config) {
 		layer:		testLayer,
 		position:		{x: 350, y: 240},
 		sprite:		'player',
-		velocity:		{magnitude: 5.5, direction: 135},
+		velocity:		{magnitude: 6, direction: 135},
 		acceleration:	{magnitude: 0.0, direction: 0},
 		mass:		300.00
 	});
@@ -128,8 +128,8 @@ var PlatformerApp = function(config) {
 
 	var vport = _viewportGenerator.addComponent({
 		handle:		'test-vport',
-		height:		434,
-		width:		610,
+		height:		400,
+		width:		600,
 		grid:		mainGrid,
 		gridPos:		{x: 1, y: 1},
 		screenPos:	{x: 20, y: 20}
@@ -139,7 +139,7 @@ var PlatformerApp = function(config) {
 		height:		230,
 		width:		230,
 		grid:		mainGrid,
-		gridPos:		{x: 100, y: 100},
+		gridPos:		{x: 210, y: 100},
 		screenPos:	{x: 650, y: 200}
 	});
 
@@ -182,6 +182,8 @@ var PlatformerApp = function(config) {
 
 	vport2.pinToAsset(testAssetB.getHandle());
 
+	vport.raycast({x: 300, y: 200}, 90);
+
 	_self.draw();
 
 	/*
@@ -194,15 +196,15 @@ var PlatformerApp = function(config) {
 	Attached upgrades work automatically. Possibly inclue some programmable logic for one/all upgrades.
 	Or hard-points can each have settings, e.g. sweep, track(?), adjust to vessel motion.
 
-	To-do's:
-	Implement ray-casting.
-	Repeating sprites??
+	Features:
+	Implement ray-casting
+	Repeating asset sprites?
 	Parallaxing backgrounds/layers
 	*/
 
 
 	const INTERVAL = 50;
-	if( 1 ) {
+	if( 0 ) {
 		setInterval(function() {
 			gameTime += INTERVAL;
 

@@ -93,54 +93,34 @@ Viewport.prototype.init = function(config) {
 			var assetCenterX	= assetPosition.x + assetDimensions.width * 0.5;
 			var assetCenterY	= assetPosition.y + assetDimensions.height * 0.5;
 
-			if( assetCenterX > vportCenterX + edgeBufferX ) {
-				if( assetCenterX >= vportHalfWidth ) {
-					if( assetCenterX < gridDimensions.width - vportHalfWidth ) {
-						_gridPos.x = assetCenterX - vportHalfWidth - edgeBufferX;
-					}
+			// Asset not within half viewport X of grid edge
+			if( assetCenterX >= (vportHalfWidth - edgeBufferX) && assetCenterX < gridDimensions.width - vportHalfWidth + edgeBufferX ) {
+				// Asset within the viewport X buffer region
+				if( assetCenterX < vportCenterX - edgeBufferX ) {
+					// Within left edge
+					_gridPos.x -= (vportCenterX - assetCenterX - edgeBufferX);
 				}
-			}
-			if( assetCenterX < vportCenterX - edgeBufferX ) {
-				if( assetCenterX >= vportHalfWidth ) {
-					if( assetCenterX < gridDimensions.width - vportHalfWidth ) {
-						_gridPos.x = assetCenterX - vportHalfWidth + edgeBufferX;
-					}
+				if( assetCenterX > vportCenterX + edgeBufferX ) {
+					// Within right edge
+					_gridPos.x += (assetCenterX - vportCenterX - edgeBufferX);
+
 				}
 			}
 
-			if( assetCenterY > vportCenterY + edgeBufferY ) {
-				if( assetCenterY >= vportHalfHeight ) {
-					if( assetCenterY < gridDimensions.height - vportHalfHeight ) {
-						_gridPos.y = assetCenterY - vportHalfHeight - edgeBufferY;
-					}
+			// Asset not within half viewport Y of grid edge
+			if( assetCenterY >= (vportHalfHeight - edgeBufferY) && assetCenterY < gridDimensions.height - vportHalfHeight + edgeBufferY ) {
+				// Asset within the viewport Y buffer region
+				if( assetCenterY < vportCenterY - edgeBufferY ) {
+					// Within top edge
+					_gridPos.y -= (vportCenterY - assetCenterY - edgeBufferY);
+				}
+				if( assetCenterY > vportCenterY + edgeBufferY ) {
+					// Within bottom edge
+					_gridPos.y += (assetCenterY - vportCenterY - edgeBufferY);
 				}
 			}
-			if( assetCenterY < vportCenterY - edgeBufferY ) {
-				if( assetCenterY >= vportHalfHeight ) {
-					if( assetCenterY < gridDimensions.height - vportHalfHeight ) {
-						_gridPos.y = assetCenterY - vportHalfHeight + edgeBufferY;
-					}
-				}
-			}
-
-			// Old
-			/*
-			if( assetCenterX >= vportHalfWidth ) {
-				if( assetCenterX < gridDimensions.width - vportHalfWidth ) {
-					_gridPos.x = assetCenterX - vportHalfWidth;
-				}
-			}
-			*/
-			/*
-			if( assetCenterY >= vportHalfHeight ) {
-				if( assetCenterY < gridDimensions.height - vportHalfHeight ) {
-					_gridPos.y = assetCenterY - vportHalfHeight;
-				}
-			}
-			*/
 
 			_self.enforceGridLimits();
-			console.log(_gridPos)
 		}
 	}
 
@@ -201,6 +181,75 @@ Viewport.prototype.init = function(config) {
 		}
 
 		return assets;
+	}
+
+	// Cast rays from a provided point within the viewport, limited to a certain degree arc. Limit rays to viewport bounds. Return all points within rays.
+
+	// Need parameter for array of assets to interact with.
+	/**
+	 *
+	 *
+	 * @param		{object}	focalPoint	Center x- and y-coordinates object
+	 * @param		{float}	arcStart		Starting degrees of arc
+	 * @param		{float}	arcEnd		Ending degrees of arc
+	 * @return	{array}				Array of point objects
+	 */
+	_self.raycast = function(focalPoint, arcStart = 0, arcEnd = 360) {
+		var points = [];
+
+		//arcStart += 270; // Flip sign on Y coordinates
+
+		// Create a 2-d array of points with dimensions equal to the viewport
+		for(var i = 0; i <= _width; i++) {
+			points[i] = [];
+
+			for(var j = 0; j <= _height; j++) {
+				points[i][j] = false;
+			}
+		}
+
+		// Focal point relative to the viewport's size
+		var vportFocal = {
+			x: focalPoint.x - _gridPos.x,
+			y: focalPoint.y - _gridPos.y
+		};
+
+		var endPoint1 = {
+			x: 0,
+			y: 0
+		};
+
+		var slope1 = Math.tan( degreesToRadians(arcStart) );
+		var slope1X = Math.cos( degreesToRadians(arcStart) ) * slope1;
+		var slope1Y = Math.sin( degreesToRadians(arcStart) ) * slope1;
+
+		console.log(slope1X)
+		console.log(slope1Y)
+
+		//f(x) = slope1(x  + focalPoint.x) + focalPoint.y;
+
+		/*
+		var realX = 0;
+		var realY = 0;
+
+		if( slope1 > 0.1 ) {
+			var testX = (_height - vportFocal.y) / slope1;
+			var testY = slope1 * (_width - vportFocal.x);
+
+			if( testX + vportFocal.x > _width ) {
+				realY = testY;
+				realX = realY / slope1;
+			} else {
+				realX = testX;
+				realY = slope1 * realX;
+			}
+		} else {
+			realX = (_width - vportFocal.x);
+			realY = 0;
+		}
+		*/
+
+		return [];
 	}
 
 	// clear each layer within viewport's screen area.
