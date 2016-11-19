@@ -197,8 +197,6 @@ Viewport.prototype.init = function(config) {
 	_self.raycast = function(focalPoint, arcStart = 0, arcEnd = 360) {
 		var points = [];
 
-		//arcStart += 270; // Flip sign on Y coordinates
-
 		// Create a 2-d array of points with dimensions equal to the viewport
 		for(var i = 0; i <= _width; i++) {
 			points[i] = [];
@@ -220,13 +218,10 @@ Viewport.prototype.init = function(config) {
 		};
 
 		var slope1 = Math.tan( degreesToRadians(arcStart) );
-		var slope1X = Math.cos( degreesToRadians(arcStart) ) * slope1;
-		var slope1Y = Math.sin( degreesToRadians(arcStart) ) * slope1;
-
-		console.log(slope1X)
-		console.log(slope1Y)
 
 		//f(x) = slope1(x  + focalPoint.x) + focalPoint.y;
+
+		//var output = slope1 * (600 + focalPoint.x) + focalPoint.y;
 
 		/*
 		var realX = 0;
