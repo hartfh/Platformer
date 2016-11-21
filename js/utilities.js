@@ -49,6 +49,18 @@ function getElasticVelocities(m1, m2, v1, v2) {
 	}
 }
 
+function normalizeAngle(degrees) {
+	// Correct for angles outside of 0-360 range
+	while( degrees < 0 ) {
+		degrees += 360;
+	}
+	while( degrees > 360 ) {
+		degrees -= 360;
+	}
+
+	return degrees;
+}
+
 function degreesToRadians(degrees) {
 	return Math.PI * degrees / 180;
 }
@@ -65,4 +77,55 @@ function boxesOverlap(box1, box2) {
 	}
 
 	return false;
+}
+
+function getLinePoints(origin, terminus) {
+	var points = [];
+
+	if( origin.x == terminus.x && origin.y == terminus.y ) {
+		return points;
+	}
+
+	var slope = (terminus.y - origin.y) / (terminus.x - origin.x);
+
+	if( Math.abs(slope) > 1 ) {
+		slope = (terminus.x - origin.x) / (terminus.y - origin.y);
+
+		if( origin.y < terminus.y ) {
+			var start	= origin;
+			var end	= terminus;
+		} else {
+			var start	= terminus;
+			var end	= origin;
+		}
+
+		var offset = start.x - slope * start.y;
+
+		for(var y = start.y; y <= end.y; y++) {
+			var x = slope * y + offset;
+			x = Math.round(x);
+
+			points.push({x: x, y: y});
+		}
+	} else {
+		if( origin.x < terminus.x ) {
+			var start	= origin;
+			var end	= terminus;
+		} else {
+			var start	= terminus;
+			var end	= origin;
+		}
+
+		var offset = start.y - slope * start.x;
+
+		for(var x = start.x; x <= end.x; x++) {
+			var y = slope * x + offset;
+
+			y = Math.round(y);
+
+			points.push({x: x, y: y});
+		}
+	}
+
+	return points;
 }

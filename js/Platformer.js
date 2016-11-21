@@ -182,7 +182,7 @@ var PlatformerApp = function(config) {
 
 	vport2.pinToAsset(testAssetB.getHandle());
 
-	vport.raycast({x: 300, y: 200}, 45);
+	vport.raycast({x: 300, y: 200}, 0, 360);
 
 	_self.draw();
 

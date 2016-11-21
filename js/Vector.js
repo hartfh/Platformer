@@ -38,7 +38,7 @@ Vector.prototype.init = function(magnitude, direction) {
 			degrees -= 360;
 		}
 
-		_direction	= degrees;
+		_direction	= normalizeAngle(degrees);
 		_radians		= degreesToRadians(degrees);
 	}
 

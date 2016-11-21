@@ -190,11 +190,11 @@ Viewport.prototype.init = function(config) {
 	 *
 	 *
 	 * @param		{object}	focalPoint	Center x- and y-coordinates object
-	 * @param		{float}	arcStart		Starting degrees of arc
-	 * @param		{float}	arcEnd		Ending degrees of arc
+	 * @param		{float}	arcDirection	Angle of center line of arc
+	 * @param		{float}	arcWidth		Degree width of arc
 	 * @return	{array}				Array of point objects
 	 */
-	_self.raycast = function(focalPoint, arcStart = 0, arcEnd = 360) {
+	_self.raycast = function(focalPoint, arcDirection = 0, arcWidth = 0) {
 		var points = [];
 
 		// Create a 2-d array of points with dimensions equal to the viewport
@@ -208,41 +208,101 @@ Viewport.prototype.init = function(config) {
 
 		// Focal point relative to the viewport's size
 		var vportFocal = {
-			x: focalPoint.x - _gridPos.x,
-			y: focalPoint.y - _gridPos.y
+			x: focalPoint.x - _gridPos.x + 1,
+			y: focalPoint.y - _gridPos.y + 1
 		};
 
-		var endPoint1 = {
-			x: 0,
-			y: 0
-		};
-
-		var slope1 = Math.tan( degreesToRadians(arcStart) );
-
-		//f(x) = slope1(x  + focalPoint.x) + focalPoint.y;
-
-		//var output = slope1 * (600 + focalPoint.x) + focalPoint.y;
-
-		/*
-		var realX = 0;
-		var realY = 0;
-
-		if( slope1 > 0.1 ) {
-			var testX = (_height - vportFocal.y) / slope1;
-			var testY = slope1 * (_width - vportFocal.x);
-
-			if( testX + vportFocal.x > _width ) {
-				realY = testY;
-				realX = realY / slope1;
-			} else {
-				realX = testX;
-				realY = slope1 * realX;
-			}
-		} else {
-			realX = (_width - vportFocal.x);
-			realY = 0;
+		if( arcWidth > 360 ) {
+			arcWidth = 360;
 		}
-		*/
+
+		var angleC = normalizeAngle( arcDirection );
+		var angle1 = normalizeAngle( angleC + (arcWidth / 2) );
+		var angle2 = normalizeAngle( angleC - (arcWidth / 2) );
+
+		var slopeC = Math.tan( degreesToRadians(angleC) );
+		var slope1 = Math.tan( degreesToRadians(angle1) );
+		var slope2 = Math.tan( degreesToRadians(angle2) );
+
+		var edgeLineData = {
+			center:	{
+				slope:	slopeC,
+				angle:	angleC
+			},
+			point1:	{
+				slope:	slope1,
+				angle:	angle1
+			},
+			point2:	{
+				slope:	slope2,
+				angle:	angle2
+			}
+		};
+
+		var edgeTermini = {}; // edge ray end points. coordinates are relative to viewport.
+
+		for(var i in edgeLineData) {
+			var edgeLineDatum = edgeLineData[i];
+
+			var angle = edgeLineDatum.angle;
+			var slope = edgeLineDatum.slope;
+
+			var testX, testY;
+
+			if( angle >= 0 && angle < 180 ) {
+				// up
+				testY = _height - focalPoint.y;
+			} else {
+				// down
+				testY = -1 * focalPoint.y;
+			}
+			if( angle >= 90 && angle <= 270 ) {
+				// left
+				testX = -1 * focalPoint.x;
+			} else {
+				// right
+				testX = _width - focalPoint.x;
+			}
+
+			var resultX = testY / slope;
+			var resultY = slope * testX;
+
+			// testY exceeds an X boundary
+			if( resultX + focalPoint.x > _width || resultX + focalPoint.x < 0 ) {
+				edgeTermini[i] = {
+					x: testX + focalPoint.x,
+					y: -1 * resultY + focalPoint.y
+				};
+			}
+			// testX exceeds a Y boundary
+			if( resultY + focalPoint.y > _height || resultY + focalPoint.y < 0 ) {
+				edgeTermini[i] = {
+					x: resultX + focalPoint.x,
+					y: -1 * testY + focalPoint.y
+				};
+			}
+		}
+
+		console.log(edgeTermini);
+
+		if( edgeTermini.center.y == _height ) {
+			// start on bottom edge
+			console.log('bottom')
+			// +/-X, then -Y
+		} else if( edgeTermini.center.y == 0 ) {
+			// start on top edge
+			console.log('top')
+			// +/-X, then +Y
+		} else if( edgeTermini.center.x == _width ) {
+			// start on right edge
+			console.log('right')
+			// +/-Y, then -X
+		} else {
+			// start on left edge
+			console.log('left')
+			// +/-Y, then +X
+		}
+
 
 		return [];
 	}
