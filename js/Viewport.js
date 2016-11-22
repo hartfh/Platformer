@@ -285,23 +285,80 @@ Viewport.prototype.init = function(config) {
 
 		console.log(edgeTermini);
 
+		var first, second, third;
+		var increment;
+		var max;
+
 		if( edgeTermini.center.y == _height ) {
 			// start on bottom edge
-			console.log('bottom')
-			// +/-X, then -Y
+			console.log('bottom');
+			first = 'x';
+			second = 'y';
+			third = 'x';
+			increment = -1;
+
+			// +/-X, then -Y, then -/+X
 		} else if( edgeTermini.center.y == 0 ) {
 			// start on top edge
-			console.log('top')
-			// +/-X, then +Y
+			console.log('top');
+			first = 'x';
+			second = 'y';
+			third = 'x';
+			increment = 1;
+			// +/-X, then +Y, then -/+X
 		} else if( edgeTermini.center.x == _width ) {
 			// start on right edge
-			console.log('right')
-			// +/-Y, then -X
+			console.log('right');
+			first = 'y';
+			second = 'x';
+			third = 'y';
+			increment = -1;
+			// +/-Y, then -X, then -/+Y
+
+			var diff = _height - edgeTermini.center.y;
+
+			// TODO: need to insert edgeTermini.point1 and point1 to stop loop.
+			// do a check each time if it's equal to ppint1/2 and if so exit entirely?
+
+			for(var a = 0; a < diff; a++) {
+				var endPoint = {x: edgeTermini.center.x, y: edgeTermini.center.y};
+
+				endPoint.y += a;
+				// get in between points
+			}
+
+			for(var b = 0; b < _width; b++) {
+				var endPoint = {x: edgeTermini.center.x, y: edgeTermini.center.y};
+
+				endPoint.y += a;
+				endPoint.x -= b;
+			}
+			for(var c = 0; c < diff; c++) {
+				var endPoint = {x: edgeTermini.center.x, y: edgeTermini.center.y};
+
+				endPoint.y += a;
+				endPoint.x -= b;
+				endPoint.y -= c;
+			}
 		} else {
 			// start on left edge
-			console.log('left')
-			// +/-Y, then +X
+			console.log('left');
+			first = 'y';
+			second = 'x';
+			third = 'y';
+			increment = 1;
+			// +/-Y, then +X, then -/+Y
 		}
+
+		// from focalPoint to modified edgeTermini.center
+		//edgeTermini.center.x
+		//edgeTermini.center.y
+
+
+
+
+		// start at edgeTermini.center
+		// do two loops
 
 
 		return [];
