@@ -184,7 +184,6 @@ Viewport.prototype.init = function(config) {
 	}
 
 	// Cast rays from a provided point within the viewport, limited to a certain degree arc. Limit rays to viewport bounds. Return all points within rays.
-
 	// Need parameter for array of assets to interact with.
 	/**
 	 *
@@ -195,16 +194,6 @@ Viewport.prototype.init = function(config) {
 	 * @return	{array}				Array of point objects
 	 */
 	_self.raycast = function(focalPoint, arcDirection = 0, arcWidth = 0) {
-		var points = [];
-
-		// Create a 2-d array of points with dimensions equal to the viewport
-		for(var i = 0; i <= _width; i++) {
-			points[i] = [];
-
-			for(var j = 0; j <= _height; j++) {
-				points[i][j] = false;
-			}
-		}
 
 		// Focal point relative to the viewport's size
 		var vportFocal = {
@@ -212,156 +201,15 @@ Viewport.prototype.init = function(config) {
 			y: focalPoint.y - _gridPos.y + 1
 		};
 
-		if( arcWidth > 360 ) {
-			arcWidth = 360;
-		}
+		var rayC = new Raycaster({
+			focalPoint:	focalPoint,
+			arcDirection:	arcDirection,
+			arcWidth:		arcWidth,
+			width:		_width,
+			height:		_height
+		});
 
-		var angleC = normalizeAngle( arcDirection );
-		var angle1 = normalizeAngle( angleC + (arcWidth / 2) );
-		var angle2 = normalizeAngle( angleC - (arcWidth / 2) );
-
-		var slopeC = Math.tan( degreesToRadians(angleC) );
-		var slope1 = Math.tan( degreesToRadians(angle1) );
-		var slope2 = Math.tan( degreesToRadians(angle2) );
-
-		var edgeLineData = {
-			center:	{
-				slope:	slopeC,
-				angle:	angleC
-			},
-			point1:	{
-				slope:	slope1,
-				angle:	angle1
-			},
-			point2:	{
-				slope:	slope2,
-				angle:	angle2
-			}
-		};
-
-		var edgeTermini = {}; // edge ray end points. coordinates are relative to viewport.
-
-		for(var i in edgeLineData) {
-			var edgeLineDatum = edgeLineData[i];
-
-			var angle = edgeLineDatum.angle;
-			var slope = edgeLineDatum.slope;
-
-			var testX, testY;
-
-			if( angle >= 0 && angle < 180 ) {
-				// up
-				testY = _height - focalPoint.y;
-			} else {
-				// down
-				testY = -1 * focalPoint.y;
-			}
-			if( angle >= 90 && angle <= 270 ) {
-				// left
-				testX = -1 * focalPoint.x;
-			} else {
-				// right
-				testX = _width - focalPoint.x;
-			}
-
-			var resultX = testY / slope;
-			var resultY = slope * testX;
-
-			// testY exceeds an X boundary
-			if( resultX + focalPoint.x > _width || resultX + focalPoint.x < 0 ) {
-				edgeTermini[i] = {
-					x: testX + focalPoint.x,
-					y: -1 * resultY + focalPoint.y
-				};
-			}
-			// testX exceeds a Y boundary
-			if( resultY + focalPoint.y > _height || resultY + focalPoint.y < 0 ) {
-				edgeTermini[i] = {
-					x: resultX + focalPoint.x,
-					y: -1 * testY + focalPoint.y
-				};
-			}
-		}
-
-		console.log(edgeTermini);
-
-		var first, second, third;
-		var increment;
-		var max;
-
-		if( edgeTermini.center.y == _height ) {
-			// start on bottom edge
-			console.log('bottom');
-			first = 'x';
-			second = 'y';
-			third = 'x';
-			increment = -1;
-
-			// +/-X, then -Y, then -/+X
-		} else if( edgeTermini.center.y == 0 ) {
-			// start on top edge
-			console.log('top');
-			first = 'x';
-			second = 'y';
-			third = 'x';
-			increment = 1;
-			// +/-X, then +Y, then -/+X
-		} else if( edgeTermini.center.x == _width ) {
-			// start on right edge
-			console.log('right');
-			first = 'y';
-			second = 'x';
-			third = 'y';
-			increment = -1;
-			// +/-Y, then -X, then -/+Y
-
-			var diff = _height - edgeTermini.center.y;
-
-			// TODO: need to insert edgeTermini.point1 and point1 to stop loop.
-			// do a check each time if it's equal to ppint1/2 and if so exit entirely?
-
-			for(var a = 0; a < diff; a++) {
-				var endPoint = {x: edgeTermini.center.x, y: edgeTermini.center.y};
-
-				endPoint.y += a;
-				// get in between points
-			}
-
-			for(var b = 0; b < _width; b++) {
-				var endPoint = {x: edgeTermini.center.x, y: edgeTermini.center.y};
-
-				endPoint.y += a;
-				endPoint.x -= b;
-			}
-			for(var c = 0; c < diff; c++) {
-				var endPoint = {x: edgeTermini.center.x, y: edgeTermini.center.y};
-
-				endPoint.y += a;
-				endPoint.x -= b;
-				endPoint.y -= c;
-			}
-		} else {
-			// start on left edge
-			console.log('left');
-			first = 'y';
-			second = 'x';
-			third = 'y';
-			increment = 1;
-			// +/-Y, then +X, then -/+Y
-		}
-
-		// from focalPoint to modified edgeTermini.center
-		//edgeTermini.center.x
-		//edgeTermini.center.y
-
-
-
-
-		// start at edgeTermini.center
-		// do two loops
-
-
-		return [];
+		//return [];
 	}
 
 	// clear each layer within viewport's screen area.
