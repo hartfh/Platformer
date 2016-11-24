@@ -200,6 +200,7 @@ var PlatformerApp = function(config) {
 	Implement ray-casting
 	Repeating asset sprites?
 	Parallaxing backgrounds/layers
+	Oblique collisions
 	*/
 
 

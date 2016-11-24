@@ -8,7 +8,7 @@ var Raycaster = function(config) {
 	var _points		= [];
 	var _edgeTermini	= {};
 
-	// Create a 2-d array of points with dimensions equal to the viewport
+	// Create a 2-d array of points with dimensions equal to the specified area
 	for(var i = 0; i <= _areaWidth; i++) {
 		_points[i] = [];
 
@@ -104,7 +104,7 @@ var Raycaster = function(config) {
 
 	// get rays when direction points to left or right area edge
 	_self.getHorizontalEdgeRays = function() {
-		var xModifier;
+		var difference, xModifier, yModifier;
 
 		if( _edgeTermini.center.x == _areaWidth ) {
 			// right edge
@@ -114,18 +114,15 @@ var Raycaster = function(config) {
 			xModifier = 1;
 		}
 
-
 		for(var k = 0; k < 2; k++) {
-
-			var proceed	= true;
-			var difference;
+			var proceed = true;
 
 			if(k == 0) {
-				var yModifier = 1;
-				difference = _areaHeight - _edgeTermini.center.y;
+				yModifier		= 1;
+				difference	= _areaHeight - _edgeTermini.center.y;
 			} else {
-				var yModifier = -1;
-				difference = _edgeTermini.center.y;
+				yModifier		= -1;
+				difference	= _edgeTermini.center.y;
 			}
 
 			for(var a = 0; a < difference; a++) {

@@ -13,11 +13,10 @@ Asset.prototype.init = function(config) {
 	var _sprite		= config.sprite || 'error';					// A code in the sprite lookup table
 	var _velocity		= (config.velocity) ? new Vector(config.velocity.magnitude, config.velocity.direction) : new Vector(0, 0);
 	var _acceleration	= (config.acceleration) ? new Vector(config.acceleration.magnitude, config.acceleration.direction) : new Vector(0, 0);
-	//var _elasticity	= config.elasticity || 1;					// Ranges from 0 - 1. Defines how much of velocity will be retains during a collision with another asset (1 => 100%)
 	// var _crumple	= 0; // how much kinetic energy gets dispersed during collisions
 	var _mass			= config.mass || 0;
-	// _immobile = false; // not moved during collisions
 	var _frames		= [];									// Current frame each sprite is on. Gets further initialized during initialSetup()
+	var _immobile		= config.immobile || false;					// Not moved during collisions. Simulates having an extremely large mass value
 
 	//var _solid = true/false;
 
@@ -55,6 +54,10 @@ Asset.prototype.init = function(config) {
 
 	_self.getMass = function() {
 		return _mass;
+	}
+
+	_self.isImmobile = function() {
+		return _immobile;
 	}
 
 	_self.getVelocity = function() {
@@ -129,6 +132,16 @@ Asset.prototype.init = function(config) {
 		var v1	= _self.getVelocity();
 		var v2	= asset.getVelocity();
 
+		if( _self.isImmobile() ) {
+
+		}
+		if( asset.isImmobile() ) {
+
+		}
+
+		// TODO: add a way for assets (e.g. terrain) to have infinite mass and thus be immobile
+		// Objects that collide with it will bounce, so crumpling will need to be added to dissipate energy
+
 		var xMagnitudes = getElasticVelocities(m1, m2, v1.getX(), v2.getX());
 		var yMagnitudes = getElasticVelocities(m1, m2, v1.getY(), v2.getY());
 
@@ -163,6 +176,8 @@ Asset.prototype.init = function(config) {
 						for(var b in hitboxes) {
 							var hitbox = hitboxes[b];
 
+							// TODO: Implement oblique collisions (vs. head-on)
+							// Determine if it will be X-component or Y-component or both that causes collision
 							if( boxesOverlap(hitbox, ownHitbox) ) {
 								_self.collideWith(asset);
 
