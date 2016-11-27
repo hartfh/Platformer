@@ -36,11 +36,12 @@ var PlatformerApp = function(config) {
 		handle:		'test-asset-B',
 		grid:		mainGrid,
 		layer:		testLayer,
-		position:		{x: 350, y: 240},
+		position:		{x: 350, y: 220},
 		sprite:		'player',
-		velocity:		{magnitude: 6, direction: 135},
+		velocity:		{magnitude: 1, direction: 210},
 		acceleration:	{magnitude: 0.0, direction: 0},
-		mass:		300.00
+		mass:		200.00,
+		immobile:		false
 	});
 	var testAssetC = _assetGenerator.addComponent({
 		handle:		'test-asset-B',
@@ -56,11 +57,11 @@ var PlatformerApp = function(config) {
 		handle:		'test-asset-B',
 		grid:		mainGrid,
 		layer:		testLayer,
-		position:		{x: 260, y: 280},
+		position:		{x: 270, y: 275},
 		sprite:		'player',
-		velocity:		{magnitude: 0, direction: 135},
+		velocity:		{magnitude: 1, direction: 50},
 		acceleration:	{magnitude: 0.0, direction: 0},
-		mass:		300.00
+		mass:		200.00
 	});
 
 	/*
@@ -205,17 +206,19 @@ var PlatformerApp = function(config) {
 
 
 	const INTERVAL = 50;
-	if( 0 ) {
+	if( 1 ) {
 		setInterval(function() {
 			gameTime += INTERVAL;
 
-			/*
-			_assetGenerator.eachComponent(function(asset, handle) {
-				asset.move();
-			});
-			*/
 
 			testAssetB.move();
+			testAssetD.move();
+
+			/*
+			_assetGenerator.eachComponent(function(asset, handle) {
+				asset.setMoved(false);
+			});
+			*/
 
 			/*
 			testAsset.move();

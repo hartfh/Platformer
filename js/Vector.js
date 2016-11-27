@@ -77,4 +77,31 @@ Vector.prototype.init = function(magnitude, direction) {
 	_self.getMagnitude = function() {
 		return _magnitude;
 	}
+
+	_self.getNumberDimensions = function() {
+		var num = 0;
+
+		if( _self.getX() ) {
+			num++;
+		}
+		if( _self.getY() ) {
+			num++;
+		}
+
+		return num;
+	}
+
+	_self.isOneDimensional = function() {
+		var vX = _self.getX();
+		var vY = _self.getY();
+
+		if( vX && !vY ) {
+			return 'x';
+		}
+		if( !vX && vY ) {
+			return 'y';
+		}
+
+		return false;
+	}
 };

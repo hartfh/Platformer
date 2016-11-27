@@ -10,7 +10,7 @@ function sequencePoints(first, second) {
 		throw new Error('Must provide exactly two arguments.');
 	}
 
-	var pointError	= new Error('Arguments much each be a coordinate object with x- and y-properties.');
+	var pointError	= new Error('Arguments must each be a coordinate object with x- and y-properties.');
 	var points	= [first, second];
 
 	for(var i in points) {
@@ -49,8 +49,18 @@ function getElasticVelocities(m1, m2, v1, v2) {
 	}
 }
 
+function getElasticVelocities2D(m1, m2, v1, v2, theta1, theta2, phi) {
+	v1x = (  (  v1 * Math.cos(theta1 - phi) * (m1 - m2) + (2 * m2 * v2 * Math.cos(theta2 - phi))  ) * Math.cos(phi) / (m1 + m2)   ) + (v1 * Math.sin(theta1 - phi) * Math.cos(phi + 90));
+	v1y = (  (  v1 * Math.cos(theta1 - phi) * (m1 - m2) + (2 * m2 * v2 * Math.cos(theta2 - phi))  ) * Math.sin(phi) / (m1 + m2)   ) + (v1 * Math.sin(theta1 - phi) * Math.sin(phi + 90));
+
+	return {
+		x:	v1x,
+		y:	v1y
+	};
+}
+
+// Correct for angles outside of 0-360 range
 function normalizeAngle(degrees) {
-	// Correct for angles outside of 0-360 range
 	while( degrees < 0 ) {
 		degrees += 360;
 	}
@@ -67,6 +77,24 @@ function degreesToRadians(degrees) {
 
 function radiansToDegrees(radians) {
 	return radians * 180 / Math.PI;
+}
+
+function boxesOverlapX(box1, box2) {
+	if( box1.start.x <= box2.end.x && box1.end.x >= box2.start.x ) {
+		console.log('overlap X');
+		return true;
+	}
+
+	return false;
+}
+
+function boxesOverlapY(box1, box2) {
+	if( box1.start.y <= box2.end.y && box1.end.y >= box2.start.y ) {
+		console.log('overlap Y');
+		return true;
+	}
+
+	return false;
 }
 
 function boxesOverlap(box1, box2) {

@@ -17,6 +17,7 @@ Asset.prototype.init = function(config) {
 	var _mass			= config.mass || 0;
 	var _frames		= [];									// Current frame each sprite is on. Gets further initialized during initialSetup()
 	var _immobile		= config.immobile || false;					// Not moved during collisions. Simulates having an extremely large mass value
+	var _moved		= false;
 
 	//var _solid = true/false;
 
@@ -124,13 +125,27 @@ Asset.prototype.init = function(config) {
 		_velocity.combineWith(_acceleration);
 	}
 
-	// Implement an elastic collision between this and another asset
+	// Implement an elastic head-on collision between this and another asset
 	// TODO: add "crumpling" property, so assets can diffuse some of the kinetic energy
-	_self.collideWith = function(asset) {
+	_self.collideWidth = function(asset) {
+		var selfCenter		= _self.getCenter();
+		var otherCenter	= asset.getCenter();
+
+		var diffX = selfCenter.x - otherCenter.x;
+		var diffY = -1 * (selfCenter.y - otherCenter.y);
+
+		var diffAngle = radiansToDegrees( Math.atan(diffY/diffX) );
+
 		var m1	= _self.getMass();
 		var m2	= asset.getMass();
 		var v1	= _self.getVelocity();
 		var v2	= asset.getVelocity();
+
+		var v1Mag	= v1.getMagnitude();
+		var v2Mag	= v2.getMagnitude();
+		var v1Dir	= v1.getDirection();
+		var v2Dir	= v2.getDirection();
+
 
 		if( _self.isImmobile() ) {
 
@@ -139,14 +154,23 @@ Asset.prototype.init = function(config) {
 
 		}
 
+
 		// TODO: add a way for assets (e.g. terrain) to have infinite mass and thus be immobile
 		// Objects that collide with it will bounce, so crumpling will need to be added to dissipate energy
 
+		/*
 		var xMagnitudes = getElasticVelocities(m1, m2, v1.getX(), v2.getX());
 		var yMagnitudes = getElasticVelocities(m1, m2, v1.getY(), v2.getY());
-
 		v1.setMagnitudes(xMagnitudes.v1, yMagnitudes.v1);
 		v2.setMagnitudes(xMagnitudes.v2, yMagnitudes.v2);
+		*/
+
+		var v1New = getElasticVelocities2D(m1, m2, v1Mag, v2Mag, v1Dir, v2Dir, diffAngle);
+		var v2New = getElasticVelocities2D(m2, m1, v2Mag, v1Mag, v2Dir, v1Dir, diffAngle);
+		console.log(v1New)
+		console.log(v2New)
+		v2.setMagnitudes(v1New.x, v1New.y);
+		v1.setMagnitudes(v2New.x, v2New.y);
 	}
 
 	_self.isObstructed = function(distX, distY) {
@@ -179,7 +203,35 @@ Asset.prototype.init = function(config) {
 							// TODO: Implement oblique collisions (vs. head-on)
 							// Determine if it will be X-component or Y-component or both that causes collision
 							if( boxesOverlap(hitbox, ownHitbox) ) {
-								_self.collideWith(asset);
+								_self.collideWidth(asset);
+
+								/*
+								// if asset2 is immobile, collision is always oblique
+								// if both assets have only 1-dimension of motion, is head-on
+								// otherwise is oblique
+
+								if( asset.isImmobile() ) {
+									// oblique collision
+									console.log('oblique 1');
+									// check X or Y that causes collision
+									_self.collideWidth(asset);
+								} else {
+									var ownDim = _self.getVelocity().isOneDimensional();
+									var othDim = asset.getVelocity().isOneDimensional();
+
+									// If each asset has the same 1-dimensional direction
+									if( ownDim && (ownDim == othDim || !othDim) ) {
+										// head-on collision
+										console.log('head on');
+										_self.collideWidth(asset);
+									} else {
+										// oblique collission
+										console.log('oblique 2');
+										// check X or Y that causes collision
+										_self.collideWidth(asset);
+									}
+								}
+								*/
 
 								return true;
 							}
@@ -346,6 +398,15 @@ Asset.prototype.init = function(config) {
 		};
 
 		return bounds;
+	}
+
+	_self.getCenter = function() {
+		var center = {
+			x:	_gridPos.x + SPRITE_KEY[_sprite].width * 0.5,
+			y:	_gridPos.y + SPRITE_KEY[_sprite].height * 0.5
+		};
+
+		return center;
 	}
 
 	/**
